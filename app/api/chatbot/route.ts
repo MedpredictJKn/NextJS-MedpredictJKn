@@ -87,6 +87,33 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error("Chatbot error:", error);
+    
+    const errorString = String(error);
+    
+    // Handle connection pool exhaustion
+    if (errorString.includes("P2024") || errorString.includes("connection pool")) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Server sedang busy. Silakan coba lagi dalam beberapa saat.",
+          error: "Connection pool exhausted",
+        } as ApiResponse<null>,
+        { status: 503 }
+      );
+    }
+    
+    // Handle connection reset
+    if (errorString.includes("ConnectionReset") || errorString.includes("connection")) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Database connection error. Please try again.",
+          error: "Connection issue",
+        } as ApiResponse<null>,
+        { status: 503 }
+      );
+    }
+    
     return NextResponse.json(
       {
         success: false,

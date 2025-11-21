@@ -80,3 +80,43 @@ export function extractToken(authHeader: string | null): string | null {
 
   return null;
 }
+
+/**
+ * Retry async function with exponential backoff
+ * @param fn - Async function to retry
+ * @param maxRetries - Maximum number of retries
+ * @param isRetryable - Function to determine if error is retryable
+ */
+export async function retryWithBackoff<T>(
+  fn: () => Promise<T>,
+  maxRetries: number = 3,
+  isRetryable?: (error: unknown) => boolean
+): Promise<T> {
+  let retries = 0;
+
+  while (retries <= maxRetries) {
+    try {
+      return await fn();
+    } catch (error) {
+      retries++;
+
+      // Check if we should retry
+      const shouldRetry =
+        (isRetryable?.(error)) ?? 
+        (String(error).includes("connection") ||
+        String(error).includes("P2024") ||
+        String(error).includes("timeout"));
+
+      if (!shouldRetry || retries > maxRetries) {
+        throw error;
+      }
+
+      // Exponential backoff
+      const waitTime = Math.pow(2, retries) * 1000;
+      console.warn(`[retryWithBackoff] Retry ${retries}/${maxRetries} after ${waitTime}ms`);
+      await new Promise((resolve) => setTimeout(resolve, waitTime));
+    }
+  }
+
+  throw new Error("Unexpected state in retryWithBackoff");
+}

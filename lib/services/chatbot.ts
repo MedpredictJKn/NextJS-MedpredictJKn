@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import { retryWithBackoff } from "@/lib/utils";
 
 export async function saveChatHistory(
   userId: string,
@@ -6,14 +7,18 @@ export async function saveChatHistory(
   response: string,
   source: "fastapi" | "gemini"
 ) {
-  return prisma.chatHistory.create({
-    data: {
-      userId,
-      message,
-      response,
-      source,
-    },
-  });
+  return retryWithBackoff(
+    () =>
+      prisma.chatHistory.create({
+        data: {
+          userId,
+          message,
+          response,
+          source,
+        },
+      }),
+    3
+  );
 }
 
 export async function getChatHistory(userId: string, limit: number = 20) {

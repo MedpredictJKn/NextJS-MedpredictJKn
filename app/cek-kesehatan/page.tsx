@@ -238,7 +238,7 @@ export default function CekKesehatanPage() {
         setUser(userData);
         setToken(storedToken);
         setIsCheckingAuth(false);
-        
+
         // Fetch existing health data in a separate microtask to avoid cascading renders
         Promise.resolve().then(() => {
             fetchHealthData(storedToken);
