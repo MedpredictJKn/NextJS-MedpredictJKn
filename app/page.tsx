@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Activity, AlertTriangle, CheckSquare } from "lucide-react";
 
 export default function Home() {
   return (
@@ -7,7 +8,7 @@ export default function Home() {
       {/* Header */}
       <header className="bg-white shadow">
         <div className="max-w-6xl mx-auto px-4 py-6 flex justify-between items-center">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <Image
               src="/images/medpredictjkn.png"
               alt="MedpredictJKN Logo"
@@ -15,9 +16,8 @@ export default function Home() {
               height={40}
               priority
             />
-            <h1 className="text-2xl font-bold flex items-center gap-1">
-              <span style={{ color: "#123c70" }}>Medpredict</span>
-              <span style={{ color: "#76c04a" }}>JKn</span>
+            <h1 className="text-2xl font-bold">
+              <span style={{ color: "#123c70" }}>Medpredict</span><span style={{ color: "#76c04a" }}>JKn</span>
             </h1>
           </div>
           <nav className="flex gap-4">
@@ -43,14 +43,14 @@ export default function Home() {
           Prediksi Risiko Penyakit dengan Teknologi AI
         </h2>
         <p className="text-xl text-gray-600 mb-8">
-          MedpredictJKN - Sistem deteksi dini penyakit kronis berbasis data JKN
+          <span style={{ color: "#123c70" }}>Medpredict</span><span style={{ color: "#76c04a" }}>JKn</span> - Sistem deteksi dini penyakit kronis berbasis data JKN
           dengan notifikasi WhatsApp real-time
         </p>
 
         <div className="flex gap-4 justify-center mb-12">
           <Link
             href="/auth/register"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-medium"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-medium shadow-sm hover:shadow-md transition-all"
           >
             Mulai Sekarang
           </Link>
@@ -64,8 +64,10 @@ export default function Home() {
 
         {/* Features */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="text-4xl mb-4">🧮</div>
+          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg mb-4">
+              <Activity className="w-6 h-6 text-blue-600" />
+            </div>
             <h3 className="text-xl font-semibold text-gray-800 mb-2">
               Prediksi Risiko
             </h3>
@@ -74,8 +76,10 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="text-4xl mb-4">🔴</div>
+          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-red-100 rounded-lg mb-4">
+              <AlertTriangle className="w-6 h-6 text-red-600" />
+            </div>
             <h3 className="text-xl font-semibold text-gray-800 mb-2">
               Alert Otomatis
             </h3>
@@ -84,8 +88,10 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="text-4xl mb-4">📋</div>
+          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg mb-4">
+              <CheckSquare className="w-6 h-6 text-green-600" />
+            </div>
             <h3 className="text-xl font-semibold text-gray-800 mb-2">
               Rekomendasi Screening
             </h3>

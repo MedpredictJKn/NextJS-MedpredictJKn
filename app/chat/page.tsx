@@ -3,6 +3,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { AlertCircle, Send, MessageCircle, ArrowLeft, Loader, User, Bot } from "lucide-react";
 
 interface Message {
     type: "user" | "bot";
@@ -32,7 +36,6 @@ export default function ChatPage() {
 
         if (!inputValue.trim()) return;
 
-        // Ambil token langsung dari localStorage saat submit
         const token = localStorage.getItem("token");
 
         if (!token) {
@@ -41,10 +44,8 @@ export default function ChatPage() {
             return;
         }
 
-        // Store the message text before clearing inputValue
         const messageText = inputValue;
 
-        // Add user message
         const userMessage: Message = {
             type: "user",
             text: messageText,
@@ -76,7 +77,6 @@ export default function ChatPage() {
                 return;
             }
 
-            // Add bot message
             const botMessage: Message = {
                 type: "bot",
                 text: data.data.response,
@@ -93,95 +93,169 @@ export default function ChatPage() {
 
     if (isCheckingAuth) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <p className="text-gray-500">Memuat...</p>
+            <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-purple-50 to-blue-50">
+                <div className="text-center space-y-4">
+                    <div className="inline-flex h-12 w-12 animate-spin rounded-full border-4 border-purple-200 border-t-purple-600"></div>
+                    <p className="text-gray-600 font-medium">Memverifikasi akses...</p>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 py-8">
-            <div className="max-w-2xl mx-auto px-4 h-screen flex flex-col">
-                {/* Header */}
-                <div className="mb-4">
-                    <Link href="/dashboard" className="text-blue-600 hover:underline mb-4">
-                        ← Kembali ke Dashboard
+        <div className="min-h-screen bg-linear-to-br from-purple-50 via-white to-blue-50 flex flex-col">
+            {/* Header */}
+            <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+                <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+                    <Link href="/dashboard" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 font-medium">
+                        <ArrowLeft className="w-4 h-4" />
+                        Kembali
                     </Link>
-                    <h1 className="text-3xl font-bold text-gray-800">Chat dengan AI</h1>
-                    <p className="text-gray-600">Tanyakan pertanyaan kesehatan Anda</p>
+                    <div className="flex items-center gap-3">
+                        <div className="bg-linear-to-br from-purple-600 to-blue-600 p-2 rounded-full">
+                            <MessageCircle className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                            <h1 className="text-xl font-bold text-gray-900">Chat dengan AI</h1>
+                            <p className="text-xs text-gray-600">Tanyakan pertanyaan kesehatan Anda</p>
+                        </div>
+                    </div>
                 </div>
+            </header>
 
-                {/* Chat Box */}
-                <div className="flex-1 bg-white rounded-lg shadow-md p-6 mb-4 overflow-y-auto flex flex-col">
-                    {messages.length === 0 && (
-                        <div className="flex-1 flex items-center justify-center">
-                            <div className="text-center">
-                                <div className="text-5xl mb-4">💬</div>
-                                <p className="text-gray-500 text-lg">
-                                    Mulai percakapan dengan mengetik pertanyaan kesehatan Anda
+            {/* Chat Container */}
+            <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-8 flex flex-col">
+                {/* Empty State */}
+                {messages.length === 0 && (
+                    <div className="flex-1 flex items-center justify-center mb-8">
+                        <div className="text-center space-y-6">
+                            <div className="flex justify-center">
+                                <div className="bg-linear-to-br from-purple-100 to-blue-100 p-6 rounded-full">
+                                    <MessageCircle className="w-12 h-12 text-purple-600" />
+                                </div>
+                            </div>
+                            <div>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                                    Mulai Percakapan
+                                </h2>
+                                <p className="text-gray-600 max-w-md">
+                                    Tanyakan apa pun tentang kesehatan Anda. AI kami siap membantu menjawab pertanyaan dengan informasi yang akurat.
                                 </p>
                             </div>
+                            <div className="flex flex-wrap justify-center gap-2">
+                                <Button variant="outline" size="sm" className="text-xs">
+                                    Obat-obatan
+                                </Button>
+                                <Button variant="outline" size="sm" className="text-xs">
+                                    Gaya Hidup
+                                </Button>
+                                <Button variant="outline" size="sm" className="text-xs">
+                                    Nutrisi
+                                </Button>
+                                <Button variant="outline" size="sm" className="text-xs">
+                                    Kesehatan Mental
+                                </Button>
+                            </div>
                         </div>
-                    )}
+                    </div>
+                )}
 
-                    <div className="flex-1 overflow-y-auto space-y-4">
+                {/* Messages */}
+                {messages.length > 0 && (
+                    <div className="flex-1 space-y-4 mb-8 overflow-y-auto pr-2">
                         {messages.map((message, index) => (
                             <div
                                 key={index}
-                                className={`flex ${message.type === "user" ? "justify-end" : "justify-start"}`}
+                                className={`flex ${message.type === "user" ? "justify-end" : "justify-start"} animate-in fade-in slide-in-from-bottom-2`}
                             >
-                                <div
-                                    className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${message.type === "user"
-                                        ? "bg-blue-600 text-white rounded-br-none"
-                                        : "bg-gray-200 text-gray-800 rounded-bl-none"
-                                        }`}
-                                >
-                                    <p className="wrap-break-word">{message.text}</p>
-                                    <p
-                                        className={`text-xs mt-1 ${message.type === "user" ? "text-blue-100" : "text-gray-500"
-                                            }`}
-                                    >
-                                        {message.timestamp.toLocaleTimeString("id-ID", {
-                                            hour: "2-digit",
-                                            minute: "2-digit",
-                                        })}
-                                    </p>
+                                <div className={`flex gap-3 max-w-2xl ${message.type === "user" ? "flex-row-reverse" : ""}`}>
+                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${message.type === "user"
+                                        ? "bg-linear-to-br from-blue-600 to-indigo-600 text-white"
+                                        : "bg-linear-to-br from-purple-600 to-blue-600 text-white"
+                                        }`}>
+                                        {message.type === "user" ? (
+                                            <User className="w-4 h-4" />
+                                        ) : (
+                                            <Bot className="w-4 h-4" />
+                                        )}
+                                    </div>
+                                    <div>
+                                        <Card className={`border-0 ${message.type === "user"
+                                            ? "bg-linear-to-br from-blue-600 to-indigo-600 text-white shadow-md"
+                                            : "bg-white text-gray-900 shadow-md"
+                                            }`}>
+                                            <CardContent className="p-4">
+                                                <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                                                    {message.text}
+                                                </p>
+                                                <p className={`text-xs mt-3 ${message.type === "user" ? "text-blue-100" : "text-gray-500"}`}>
+                                                    {message.timestamp.toLocaleTimeString("id-ID", {
+                                                        hour: "2-digit",
+                                                        minute: "2-digit",
+                                                    })}
+                                                </p>
+                                            </CardContent>
+                                        </Card>
+                                    </div>
                                 </div>
                             </div>
                         ))}
-                    </div>
 
-                    {error && (
-                        <div className="bg-red-50 text-red-700 p-4 rounded-lg mt-4">
-                            {error}
-                        </div>
-                    )}
-                </div>
+                        {isLoading && (
+                            <div className="flex justify-start animate-in fade-in slide-in-from-bottom-2">
+                                <div className="flex gap-3">
+                                    <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-linear-to-br from-purple-600 to-blue-600 text-white">
+                                        <Bot className="w-4 h-4" />
+                                    </div>
+                                    <Card className="border-0 bg-white text-gray-900 shadow-md">
+                                        <CardContent className="p-4">
+                                            <div className="flex items-center gap-2">
+                                                <Loader className="w-4 h-4 animate-spin text-purple-600" />
+                                                <span className="text-sm text-gray-600">AI sedang berpikir...</span>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {error && (
+                    <div className="flex items-start gap-3 p-4 rounded-lg bg-red-50 border border-red-200 mb-6">
+                        <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 shrink-0" />
+                        <p className="text-red-700 text-sm">{error}</p>
+                    </div>
+                )}
 
                 {/* Input Form */}
-                <form onSubmit={handleSendMessage} className="flex gap-2">
-                    <input
+                <form onSubmit={handleSendMessage} className="flex gap-3 sticky bottom-0 bg-linear-to-t from-white to-transparent pt-4">
+                    <Input
                         type="text"
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         placeholder="Ketik pesan Anda..."
                         disabled={isLoading}
-                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+                        className="h-11 flex-1"
                     />
-                    <button
+                    <Button
                         type="submit"
                         disabled={isLoading || !inputValue.trim()}
-                        className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-6 py-2 rounded-lg transition"
+                        className="h-11 px-6 bg-linear-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
                     >
-                        {isLoading ? "..." : "Kirim"}
-                    </button>
+                        {isLoading ? (
+                            <Loader className="w-4 h-4 animate-spin" />
+                        ) : (
+                            <Send className="w-4 h-4" />
+                        )}
+                    </Button>
                 </form>
 
-                {/* Info */}
-                <div className="mt-4 text-center text-sm text-gray-500">
-                    <p>💡 Chatbot menggunakan AI untuk menjawab pertanyaan kesehatan Anda</p>
+                {/* Footer Info */}
+                <div className="text-center text-sm text-gray-600 mt-4">
+                    <p>Informasi dari AI mungkin tidak 100% akurat. Konsultasikan dengan dokter untuk diagnosis medis.</p>
                 </div>
-            </div>
+            </main>
         </div>
     );
 }
