@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyToken, extractToken } from "@/lib/utils";
-import { createHealthData, getHealthHistory, getLatestHealth } from "@/lib/services/health";
+import { createHealthData, getLatestHealth } from "@/lib/services/health";
 import { sendHealthNotification } from "@/lib/services/wa";
 import { HealthCheckPayload, ApiResponse } from "@/types";
 import { prisma } from "@/lib/db";
@@ -148,19 +148,13 @@ export async function GET(request: NextRequest) {
         ),
       ]);
 
-      const history = await Promise.race([
-        getHealthHistory(decoded.userId),
-        new Promise((_, reject) =>
-          setTimeout(() => reject(new Error("Query timeout")), 10000)
-        ),
-      ]);
-
+      // Return null atau latest jika ada
       return NextResponse.json(
         {
           success: true,
           message: "Data kesehatan berhasil diambil",
-          data: { latest, history },
-        } as ApiResponse<{ latest: typeof latest; history: typeof history }>,
+          data: latest || null,
+        } as ApiResponse<typeof latest>,
         { status: 200 }
       );
     } catch (queryError) {

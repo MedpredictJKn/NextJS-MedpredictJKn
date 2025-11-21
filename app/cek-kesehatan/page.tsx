@@ -58,29 +58,42 @@ export default function CekKesehatanPage() {
                 },
             });
 
-            if (response.ok) {
-                const data = await response.json();
-                if (data.data) {
-                    // Auto-populate form with existing data
-                    setFormData({
-                        height: data.data.height || 0,
-                        weight: data.data.weight || 0,
-                        bloodPressure: data.data.bloodPressure || "",
-                        bloodSugar: data.data.bloodSugar || undefined,
-                        cholesterol: data.data.cholesterol || undefined,
-                        notes: data.data.notes || "",
-                    });
+            if (!response.ok) {
+                console.warn(`[fetchHealthData] HTTP ${response.status}`);
+                return;
+            }
 
-                    // Show result if available
-                    if (data.data.bmi) {
-                        setResult({
-                            bmi: data.data.bmi,
-                            status: data.data.status,
-                            height: data.data.height,
-                            weight: data.data.weight,
-                        });
-                    }
+            const data = await response.json();
+            console.log("[fetchHealthData] Response:", data);
+
+            if (data.data) {
+                // Auto-populate form with existing data
+                setFormData({
+                    height: data.data.height || 0,
+                    weight: data.data.weight || 0,
+                    bloodPressure: data.data.bloodPressure || "",
+                    bloodSugar: data.data.bloodSugar || undefined,
+                    cholesterol: data.data.cholesterol || undefined,
+                    notes: data.data.notes || "",
+                });
+
+                // Show result if available
+                if (data.data.bmi) {
+                    setResult({
+                        bmi: data.data.bmi,
+                        status: data.data.status,
+                        height: data.data.height,
+                        weight: data.data.weight,
+                    });
+                    console.log("[fetchHealthData] Result loaded:", {
+                        bmi: data.data.bmi,
+                        status: data.data.status,
+                    });
+                } else {
+                    console.log("[fetchHealthData] No BMI data available");
                 }
+            } else {
+                console.log("[fetchHealthData] No health data found");
             }
         } catch (err) {
             console.error("Error fetching health data:", err);
