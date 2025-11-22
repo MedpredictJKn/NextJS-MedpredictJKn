@@ -75,7 +75,8 @@ export async function GET(request: NextRequest) {
     }
 
     // Calculate wellness score (0-100)
-    let wellnessScore = 80; // Start with default score
+    // Only calculate if user has health data, otherwise 0
+    let wellnessScore = 0;
     if (latestHealth) {
       let deductions = 0;
 
