@@ -34,7 +34,7 @@ interface HealthMetric {
 export default function DashboardPage() {
     const router = useRouter();
     const [user, setUser] = useState<User | null>(null);
-    
+
     // State Data
     const [patientCount, setPatientCount] = useState(0);
     const [activeMonitoring, setActiveMonitoring] = useState(0);
@@ -53,12 +53,12 @@ export default function DashboardPage() {
 
     // --- LOGIC UNTUK MEMECAH TEKANAN DARAH ---
     // Jika data ada, split "120/80" menjadi [120, 80]. Jika tidak, default 0.
-    const [targetSystole, targetDiastole] = latestHealth?.bloodPressure 
-        ? latestHealth.bloodPressure.split('/').map(Number) 
+    const [targetSystole, targetDiastole] = latestHealth?.bloodPressure
+        ? latestHealth.bloodPressure.split('/').map(Number)
         : [0, 0];
 
     // --- ANIMATION HOOKS ---
-    
+
     // 1. Tekanan Darah (Dianimasikan terpisah)
     const animatedSystole = useCounterAnimation(targetSystole || 0, 1500);
     const animatedDiastole = useCounterAnimation(targetDiastole || 0, 1500);
@@ -67,7 +67,7 @@ export default function DashboardPage() {
     const animatedTotalPemeriksaan = useCounterAnimation(totalPemeriksaan, 1500);
     const animatedTotalChat = useCounterAnimation(totalChat, 1500);
     const animatedAlertAktif = useCounterAnimation(alertAktif, 1500);
-    
+
     // 3. Doctor Stats
     const animatedPatientCount = useCounterAnimation(patientCount, 1500);
     const animatedActiveMonitoring = useCounterAnimation(activeMonitoring, 1500);
@@ -225,7 +225,7 @@ export default function DashboardPage() {
         },
         {
             label: "Pesan Terkirim",
-            value: animatedMessagesSent, 
+            value: animatedMessagesSent,
             icon: MessageCircle,
             color: "bg-blue-500",
         },
@@ -238,8 +238,8 @@ export default function DashboardPage() {
         {
             name: "Tekanan Darah",
             // Disini kita gabungkan kembali Systole dan Diastole yang sudah dianimasikan
-            value: latestHealth.bloodPressure 
-                ? `${Math.round(animatedSystole)}/${Math.round(animatedDiastole)}` 
+            value: latestHealth.bloodPressure
+                ? `${Math.round(animatedSystole)}/${Math.round(animatedDiastole)}`
                 : "0/A",
             unit: "mmHg",
             status: latestHealth.bloodPressure

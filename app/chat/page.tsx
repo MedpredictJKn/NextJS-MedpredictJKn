@@ -67,7 +67,6 @@ export default function ChatPage() {
     const [error, setError] = useState("");
     const [token, setToken] = useState("");
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [chatHistory, setChatHistory] = useState<ChatHistoryItem[]>([]);
     const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
     const [isLoadingHistory, setIsLoadingHistory] = useState(false);
     const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
@@ -137,8 +136,6 @@ export default function ChatPage() {
             if (response.ok) {
                 const data = await response.json();
                 if (data.data && Array.isArray(data.data)) {
-                    setChatHistory(data.data);
-
                     // Kelompokkan chat berdasarkan sessionId
                     const sessions = new Map<string, ChatSession>();
 
