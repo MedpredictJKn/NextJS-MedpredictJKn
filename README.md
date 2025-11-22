@@ -788,6 +788,8 @@ EOF
 python main.py
 ```
 
+FastAPI ML Server ini digunakan sebagai backend untuk melakukan inference atau prediksi risiko penyakit menggunakan model Machine Learning. Server dijalankan dalam environment khusus (virtual environment) untuk memisahkan dependency project. Setelah menginstal library yang dibutuhkan seperti FastAPI, Uvicorn, dan paket ML (scikit-learn serta XGBoost), dibuat file main.py yang berisi definisi API. Model yang sebelumnya sudah dilatih akan dimuat menggunakan joblib. API menyediakan endpoint /predict-risk untuk menerima input data kesehatan seperti umur, gender, tekanan darah, gula darah, dan kolesterol. Data kemudian diproses, di-normalisasi menggunakan scaler, lalu diprediksi menggunakan model untuk menghasilkan skor risiko empat penyakit. Selain itu disediakan endpoint /health untuk pengecekan status server. Dengan menjalankan FastAPI menggunakan Uvicorn, sistem dapat digunakan sebagai layanan prediksi risiko penyakit secara real-time.
+
 Server akan berjalan di: http://localhost:8000
 
 ## 📱 WhatsApp Notification Setup
@@ -930,6 +932,7 @@ MIT License - lihat [LICENSE](LICENSE) untuk detail
 - Issues: GitHub Issues
 - Discussions: GitHub Discussions
 - Email: support@medpredictjkn.com
+- visit our website : https://medpredictjkn.vercel.app/
 
 ## 🔄 Version History
 
