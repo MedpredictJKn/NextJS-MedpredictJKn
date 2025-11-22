@@ -11,8 +11,6 @@ export default function RegisterPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
-    const [registered, setRegistered] = useState(false);
-    const [registeredEmail, setRegisteredEmail] = useState("");
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -43,20 +41,14 @@ export default function RegisterPage() {
 
             if (!response.ok) {
                 setError(data.message || "Registrasi gagal");
+                setIsLoading(false);
                 return;
             }
 
-            // Show success message
-            setRegistered(true);
-            setRegisteredEmail(formData.email);
-
-            // Redirect ke login setelah 5 detik
-            setTimeout(() => {
-                router.push("/auth/login");
-            }, 5000);
+            // Langsung redirect ke login tanpa menampilkan success message
+            router.push("/auth/login");
         } catch (err) {
             setError(String(err) || "Terjadi kesalahan");
-        } finally {
             setIsLoading(false);
         }
     };
@@ -115,40 +107,14 @@ export default function RegisterPage() {
                                     </p>
                                 </div>
 
-                                {registered ? (
-                                    <div className="space-y-4 text-center py-8">
-                                        <div className="flex justify-center">
-                                            <div className="bg-green-500/20 p-3 rounded-full">
-                                                <Mail className="w-8 h-8 text-green-400" />
-                                            </div>
-                                        </div>
-                                        <h3 className="text-xl font-bold text-white">Verifikasi Email</h3>
-                                        <p className="text-gray-300 text-sm">
-                                            Kami telah mengirimkan link verifikasi ke email Anda di <span className="font-semibold text-cyan-400">{registeredEmail}</span>
-                                        </p>
-                                        <p className="text-gray-400 text-xs">
-                                            Silakan cek email Anda (termasuk folder spam) dan klik link verifikasi untuk mengaktifkan akun.
-                                        </p>
-                                        <p className="text-gray-400 text-xs pt-2">
-                                            Link berlaku selama 24 jam.
-                                        </p>
-                                        <Link
-                                            href="/auth/login"
-                                            className="inline-block mt-4 text-cyan-400 hover:text-cyan-300 font-medium transition-colors"
-                                        >
-                                            Kembali ke Login
-                                        </Link>
+                                {error && (
+                                    <div className="flex items-start gap-3 p-4 rounded-xl bg-red-500/20 border border-red-500/40 mb-6 backdrop-blur">
+                                        <AlertCircle className="w-5 h-5 text-red-400 mt-0.5 shrink-0" />
+                                        <p className="text-red-300 text-sm">{error}</p>
                                     </div>
-                                ) : (
-                                    <>
-                                        {error && (
-                                            <div className="flex items-start gap-3 p-4 rounded-xl bg-red-500/20 border border-red-500/40 mb-6 backdrop-blur">
-                                                <AlertCircle className="w-5 h-5 text-red-400 mt-0.5 shrink-0" />
-                                                <p className="text-red-300 text-sm">{error}</p>
-                                            </div>
-                                        )}
+                                )}
 
-                                        <form onSubmit={handleSubmit} className="space-y-4">
+                                <form onSubmit={handleSubmit} className="space-y-4">
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                 <div className="space-y-2">
                                                     <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
@@ -244,8 +210,6 @@ export default function RegisterPage() {
                                                 Masuk di sini
                                             </Link>
                                         </div>
-                                    </>
-                                )}
                             </div>
                         </div>
 

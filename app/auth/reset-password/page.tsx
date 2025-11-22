@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Lock, Loader, Eye, EyeOff } from "lucide-react";
+import Image from "next/image";
+import { Lock, Loader, AlertCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 export default function ResetPasswordPage() {
@@ -13,8 +14,6 @@ export default function ResetPasswordPage() {
 
     const [password, setPassword] = useState("");
     const [passwordConfirmation, setPasswordConfirmation] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
-    const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const tokenValid = !!code;
@@ -67,11 +66,11 @@ export default function ResetPasswordPage() {
                 <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
                 <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl"></div>
 
-                <div className="w-full max-w-7xl flex gap-8 relative z-10 h-auto md:h-screen md:max-h-screen md:items-center">
+                <div className="w-full max-w-7xl flex gap-8 relative z-10 h-screen md:h-auto md:max-h-screen md:items-center">
                     <div className="hidden md:w-1/2 md:flex"></div>
                     <div className="w-full md:w-1/2 flex items-center justify-center">
-                        <div className="w-full max-w-md">
-                            <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 p-8 shadow-2xl h-auto md:h-[500px] flex flex-col justify-center">
+                        <div className="w-full max-w-md space-y-6">
+                            <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 p-8 shadow-2xl">
                                 <div className="absolute top-0 right-0 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl" />
                                 <div className="relative z-10 text-center space-y-6">
                                     <h1 className="text-2xl font-bold text-white">Link Tidak Valid</h1>
@@ -103,24 +102,75 @@ export default function ResetPasswordPage() {
 
     return (
         <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4 relative">
+            {/* Background Effects */}
             <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl"></div>
 
-            <div className="w-full max-w-7xl flex gap-8 relative z-10 h-auto md:h-screen md:max-h-screen md:items-center">
-                <div className="hidden md:w-1/2 md:flex"></div>
-                <div className="w-full md:w-1/2 flex items-center justify-center py-8 md:py-0">
-                    <div className="w-full max-w-md">
-                        <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 p-8 shadow-2xl h-auto md:h-[500px] flex flex-col justify-center">
+            <div className="w-full max-w-7xl flex gap-8 relative z-10 h-screen md:h-auto md:max-h-screen md:items-center">
+                {/* Left Side - Logo & Branding */}
+                <div className="hidden md:flex md:w-1/2 flex-col items-center justify-center space-y-8 pr-8">
+                    <div className="text-center space-y-6">
+                        <div className="flex justify-center">
+                            <Image
+                                src="/images/medpredictjkn.png"
+                                alt="MedpredictJKn JKN Logo"
+                                width={120}
+                                height={120}
+                                priority
+                                className="drop-shadow-lg"
+                            />
+                        </div>
+                        <div>
+                            <h1 className="text-5xl font-bold">
+                                <span style={{ color: "#123c70", textShadow: "0 2px 8px rgba(18, 60, 112, 0.5)" }}>Medpredict</span>
+                                <span style={{ color: "#76c04a", textShadow: "0 2px 8px rgba(118, 192, 74, 0.5)" }}>JKn</span>
+                            </h1>
+                            <p className="text-lg text-gray-300 mt-4">Sistem Prediksi Risiko Kesehatan Berbasis AI</p>
+                        </div>
+                    </div>
+                    <div className="w-full h-px bg-linear-to-r from-transparent via-white/20 to-transparent"></div>
+                    <p className="text-center text-sm text-gray-400 max-w-sm">
+                        Sistem keamanan kami melindungi data kesehatan Anda dengan enkripsi tingkat enterprise
+                    </p>
+                </div>
+
+                {/* Right Side - Reset Password Form */}
+                <div className="w-full md:w-1/2 flex items-center justify-center">
+                    <div className="w-full max-w-md space-y-6">
+                        {/* Mobile Logo */}
+                        <div className="md:hidden text-center space-y-3 mb-8">
+                            <div className="flex justify-center mb-4">
+                                <Image
+                                    src="/images/medpredictjkn.png"
+                                    alt="MedpredictJKn JKN Logo"
+                                    width={80}
+                                    height={80}
+                                    priority
+                                    className="drop-shadow-lg"
+                                />
+                            </div>
+                            <div>
+                                <h1 className="text-4xl font-bold">
+                                    <span style={{ color: "#123c70" }}>Medpredict</span>
+                                    <span style={{ color: "#76c04a" }}>JKn</span>
+                                </h1>
+                                <p className="text-sm text-gray-400 mt-2">Sistem Prediksi Risiko Kesehatan Berbasis AI</p>
+                            </div>
+                        </div>
+
+                        {/* Reset Password Card */}
+                        <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 p-8 shadow-2xl">
                             <div className="absolute top-0 right-0 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl" />
 
                             <div className="relative z-10 space-y-6">
-                                <div className="space-y-2 mb-6">
+                                <div className="space-y-2">
                                     <h2 className="text-2xl font-bold text-white">Reset Password</h2>
                                     <p className="text-gray-400 text-sm">Masukkan password baru Anda</p>
                                 </div>
 
                                 {error && (
-                                    <div className="p-4 rounded-lg bg-red-500/20 border border-red-500/40 backdrop-blur">
+                                    <div className="flex items-start gap-3 p-4 rounded-xl bg-red-500/20 border border-red-500/40 mb-6 backdrop-blur">
+                                        <AlertCircle className="w-5 h-5 text-red-400 mt-0.5 shrink-0" />
                                         <p className="text-red-300 text-sm">{error}</p>
                                     </div>
                                 )}
@@ -131,28 +181,15 @@ export default function ResetPasswordPage() {
                                             <Lock className="w-4 h-4 text-purple-400" />
                                             Password Baru
                                         </label>
-                                        <div className="relative">
-                                            <Input
-                                                type={showPassword ? "text" : "password"}
-                                                value={password}
-                                                onChange={(e) => setPassword(e.target.value)}
-                                                placeholder="Minimal 6 karakter"
-                                                className="h-11 bg-white/5 border border-white/20 text-white placeholder:text-gray-500 rounded-lg focus:border-purple-400 focus:ring-purple-400/20 pr-10"
-                                                required
-                                                disabled={loading}
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={() => setShowPassword(!showPassword)}
-                                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
-                                            >
-                                                {showPassword ? (
-                                                    <EyeOff className="w-4 h-4" />
-                                                ) : (
-                                                    <Eye className="w-4 h-4" />
-                                                )}
-                                            </button>
-                                        </div>
+                                        <Input
+                                            type="password"
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            placeholder="Minimal 6 karakter"
+                                            className="h-11 bg-white/5 border border-white/20 text-white placeholder:text-gray-500 rounded-lg focus:border-purple-400 focus:ring-purple-400/20"
+                                            required
+                                            disabled={loading}
+                                        />
                                     </div>
 
                                     <div className="space-y-2">
@@ -160,28 +197,15 @@ export default function ResetPasswordPage() {
                                             <Lock className="w-4 h-4 text-purple-400" />
                                             Konfirmasi Password
                                         </label>
-                                        <div className="relative">
-                                            <Input
-                                                type={showPasswordConfirmation ? "text" : "password"}
-                                                value={passwordConfirmation}
-                                                onChange={(e) => setPasswordConfirmation(e.target.value)}
-                                                placeholder="Ulangi password"
-                                                className="h-11 bg-white/5 border border-white/20 text-white placeholder:text-gray-500 rounded-lg focus:border-purple-400 focus:ring-purple-400/20 pr-10"
-                                                required
-                                                disabled={loading}
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={() => setShowPasswordConfirmation(!showPasswordConfirmation)}
-                                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
-                                            >
-                                                {showPasswordConfirmation ? (
-                                                    <EyeOff className="w-4 h-4" />
-                                                ) : (
-                                                    <Eye className="w-4 h-4" />
-                                                )}
-                                            </button>
-                                        </div>
+                                        <Input
+                                            type="password"
+                                            value={passwordConfirmation}
+                                            onChange={(e) => setPasswordConfirmation(e.target.value)}
+                                            placeholder="Ulangi password"
+                                            className="h-11 bg-white/5 border border-white/20 text-white placeholder:text-gray-500 rounded-lg focus:border-purple-400 focus:ring-purple-400/20"
+                                            required
+                                            disabled={loading}
+                                        />
                                     </div>
 
                                     <button
@@ -200,7 +224,7 @@ export default function ResetPasswordPage() {
                                     </button>
                                 </form>
 
-                                <div className="text-center text-sm pt-4 border-t border-white/10">
+                                <div className="text-center text-sm mt-6 pt-6 border-t border-white/10">
                                     <span className="text-gray-400">Ingat password? </span>
                                     <Link href="/auth/login" className="text-pink-400 hover:text-pink-300 font-semibold transition-colors">
                                         Masuk di sini
@@ -208,6 +232,11 @@ export default function ResetPasswordPage() {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Mobile Footer Info */}
+                        <p className="md:hidden text-center text-xs text-gray-500">
+                            Data Anda dilindungi dengan enkripsi tingkat enterprise
+                        </p>
                     </div>
                 </div>
             </div>

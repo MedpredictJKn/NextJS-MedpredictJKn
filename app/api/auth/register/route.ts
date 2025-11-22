@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { hashPassword } from "@/lib/utils";
-import { sendVerificationEmail } from "@/lib/email";
-import { generateToken, getTokenExpiry } from "@/lib/token";
 import { AuthPayload, ApiResponse } from "@/types";
 
 export const runtime = "nodejs";
@@ -41,11 +39,7 @@ export async function POST(request: NextRequest) {
     // Hash password
     const hashedPassword = await hashPassword(body.password);
 
-    // Generate verification token
-    const verificationToken = generateToken();
-    const verificationTokenExpiry = getTokenExpiry(24); // 24 hours
-
-    // Create user
+    // Create user - langsung verified, tanpa perlu verifikasi email
     const user = await prisma.user.create({
       data: {
         email: body.email,
@@ -53,9 +47,7 @@ export async function POST(request: NextRequest) {
         name: body.name,
         phone: body.phone,
         role: "patient", // Default role for new registrations
-        verificationToken,
-        verificationTokenExpiry,
-        isEmailVerified: false,
+        isEmailVerified: true, // Langsung verified
       },
       select: {
         id: true,
@@ -67,21 +59,12 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Send verification email
-    try {
-      await sendVerificationEmail(user.email, verificationToken);
-    } catch (emailError) {
-      console.error("Failed to send verification email:", emailError);
-      // Don't fail registration if email fails, but log it
-    }
-
     return NextResponse.json(
       {
         success: true,
-        message: "Registrasi berhasil. Silakan cek email Anda untuk verifikasi",
         data: {
           user,
-          requiresVerification: true,
+          requiresVerification: false,
         },
       } as ApiResponse<{ user: typeof user; requiresVerification: boolean }>,
       { status: 201 }

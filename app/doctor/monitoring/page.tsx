@@ -107,11 +107,6 @@ export default function DoctorMonitoringPage() {
         };
     }, [router]);
 
-    const handleLogout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        router.push("/auth/login");
-    };
 
     const handleSendMessage = async () => {
         if (!selectedPatient || !message.trim()) return;

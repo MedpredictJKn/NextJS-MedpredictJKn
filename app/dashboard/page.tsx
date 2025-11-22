@@ -240,7 +240,7 @@ export default function DashboardPage() {
                             return (
                                 <div
                                     key={idx}
-                                    className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg border border-white/20 p-5 hover:border-white/40 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300"
+                                    className="group relative overflow-hidden rounded-xl bg-linear-to-br from-white/10 to-white/5 backdrop-blur-lg border border-white/20 p-5 hover:border-white/40 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300"
                                 >
                                     <div className="relative z-10">
                                         <div className="flex items-start mb-4">
@@ -261,7 +261,7 @@ export default function DashboardPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         {/* Health Metrics */}
                         <div className="lg:col-span-2">
-                            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg border border-white/20 p-10 min-h-80">
+                            <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-white/10 to-white/5 backdrop-blur-lg border border-white/20 p-10 min-h-80">
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl" />
 
                                 <div className="relative z-10">
@@ -304,14 +304,14 @@ export default function DashboardPage() {
                         {/* Wellness & Cek Kesehatan */}
                         <div className="flex flex-col gap-6">
                             {/* Wellness Score */}
-                            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg border border-white/20 p-6 flex-1">
+                            <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-white/10 to-white/5 backdrop-blur-lg border border-white/20 p-6 flex-1">
                                 <div className="absolute top-0 right-0 w-20 h-20 bg-green-500/10 rounded-full blur-2xl" />
 
                                 <div className="relative z-10 h-full flex flex-col">
                                     <p className="text-gray-400 text-sm font-semibold uppercase tracking-wide mb-3">Wellness Score</p>
                                     <div className="text-4xl font-bold text-white mb-4">78/100</div>
                                     <div className="h-2 bg-white/10 rounded-full overflow-hidden mb-3">
-                                        <div className="w-3/4 h-full bg-gradient-to-r from-green-500 to-emerald-500" />
+                                        <div className="w-3/4 h-full bg-linear-to-rrom-green-500 to-emerald-500" />
                                     </div>
                                     <p className="text-xs text-green-300 font-semibold mt-auto">Sangat Baik!</p>
                                 </div>
@@ -320,7 +320,7 @@ export default function DashboardPage() {
                             {/* Cek Kesehatan Link */}
                             <Link
                                 href="/cek-kesehatan"
-                                className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg border border-white/20 p-6 hover:border-white/40 hover:shadow-lg transition-all duration-300 block flex-1"
+                                className="relative overflow-hidden rounded-2xl bg-linear-to-br from-white/10 to-white/5 backdrop-blur-lg border border-white/20 p-6 hover:border-white/40 hover:shadow-lg transition-all duration-300 block flex-1"
                             >
                                 <div className="absolute top-0 right-0 w-20 h-20 bg-red-500/10 rounded-full blur-2xl" />
 
@@ -354,7 +354,7 @@ export default function DashboardPage() {
                                     <Link
                                         key={idx}
                                         href={service.href}
-                                        className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg border border-white/20 p-6 hover:border-white/40 hover:shadow-lg transition-all duration-300"
+                                        className="group relative overflow-hidden rounded-xl bg-linear-to-br from-white/10 to-white/5 backdrop-blur-lg border border-white/20 p-6 hover:border-white/40 hover:shadow-lg transition-all duration-300"
                                     >
                                         <div className="relative z-10">
                                             <div className="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">

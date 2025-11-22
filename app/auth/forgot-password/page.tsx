@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Loader } from "lucide-react";
+import { Mail, Loader, AlertCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 export default function ForgotPasswordPage() {
@@ -74,7 +74,7 @@ export default function ForgotPasswordPage() {
             <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl"></div>
 
-            <div className="w-full max-w-7xl flex gap-8 relative z-10 h-auto md:h-screen md:max-h-screen md:items-center">
+            <div className="w-full max-w-7xl flex gap-8 relative z-10 h-screen md:h-auto md:max-h-screen md:items-center">
                 {/* Left Side - Logo & Branding */}
                 <div className="hidden md:flex md:w-1/2 flex-col items-center justify-center space-y-8 pr-8">
                     <div className="text-center space-y-6">
@@ -103,7 +103,7 @@ export default function ForgotPasswordPage() {
                 </div>
 
                 {/* Right Side - Form */}
-                <div className="w-full md:w-1/2 flex items-center justify-center py-8 md:py-0">
+                <div className="w-full md:w-1/2 flex items-center justify-center">
                     <div className="w-full max-w-md space-y-6">
                         {/* Mobile Logo */}
                         <div className="md:hidden text-center space-y-3 mb-8">
@@ -126,8 +126,8 @@ export default function ForgotPasswordPage() {
                             </div>
                         </div>
 
-                        {/* Card */}
-                        <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 p-8 shadow-2xl h-auto md:h-[500px] flex flex-col justify-center">
+                        {/* Forgot Password Card */}
+                        <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 p-8 shadow-2xl">
                             <div className="absolute top-0 right-0 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl" />
 
                             <div className="relative z-10">
@@ -140,7 +140,7 @@ export default function ForgotPasswordPage() {
 
                                         {error && (
                                             <div className="flex items-start gap-3 p-4 rounded-xl bg-red-500/20 border border-red-500/40 mb-6 backdrop-blur">
-                                                <Mail className="w-5 h-5 text-red-400 mt-0.5 shrink-0" />
+                                                <AlertCircle className="w-5 h-5 text-red-400 mt-0.5 shrink-0" />
                                                 <p className="text-red-300 text-sm">{error}</p>
                                             </div>
                                         )}
@@ -181,24 +181,25 @@ export default function ForgotPasswordPage() {
                                             </button>
                                         </form>
 
-                                        <div className="text-center text-sm mt-6 pt-6 border-t border-white/10">
-                                            <span className="text-gray-400">Ingat password? </span>
-                                            <Link
-                                                href="/auth/login"
-                                                className="text-pink-400 hover:text-pink-300 font-semibold transition-colors"
-                                            >
-                                                Masuk di sini
-                                            </Link>
-                                        </div>
-
-                                        <div className="text-center text-sm">
-                                            <span className="text-gray-400">Belum punya akun? </span>
-                                            <Link
-                                                href="/auth/register"
-                                                className="text-pink-400 hover:text-pink-300 font-semibold transition-colors"
-                                            >
-                                                Daftar di sini
-                                            </Link>
+                                        <div className="text-center text-sm mt-6 pt-6 border-t border-white/10 space-y-4">
+                                            <div>
+                                                <span className="text-gray-400">Ingat password? </span>
+                                                <Link
+                                                    href="/auth/login"
+                                                    className="text-pink-400 hover:text-pink-300 font-semibold transition-colors"
+                                                >
+                                                    Masuk di sini
+                                                </Link>
+                                            </div>
+                                            <div>
+                                                <span className="text-gray-400">Belum punya akun? </span>
+                                                <Link
+                                                    href="/auth/register"
+                                                    className="text-pink-400 hover:text-pink-300 font-semibold transition-colors"
+                                                >
+                                                    Daftar di sini
+                                                </Link>
+                                            </div>
                                         </div>
                                     </>
                                 ) : (
@@ -210,7 +211,7 @@ export default function ForgotPasswordPage() {
 
                                         {error && (
                                             <div className="flex items-start gap-3 p-4 rounded-xl bg-red-500/20 border border-red-500/40 mb-6 backdrop-blur">
-                                                <Mail className="w-5 h-5 text-red-400 mt-0.5 shrink-0" />
+                                                <AlertCircle className="w-5 h-5 text-red-400 mt-0.5 shrink-0" />
                                                 <p className="text-red-300 text-sm">{error}</p>
                                             </div>
                                         )}
