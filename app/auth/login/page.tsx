@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
@@ -9,12 +9,23 @@ import { AlertCircle, Mail, Lock } from "lucide-react";
 
 export default function LoginPage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const resetSuccess = searchParams.get("resetSuccess");
+    
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState(resetSuccess ? "Password berhasil direset. Silakan login dengan password baru" : "");
     const [formData, setFormData] = useState({
         email: "",
         password: "",
     });
+
+    useEffect(() => {
+        if (resetSuccess) {
+            const timer = setTimeout(() => setSuccess(""), 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [resetSuccess]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({
@@ -26,6 +37,7 @@ export default function LoginPage() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError("");
+        setSuccess("");
         setIsLoading(true);
 
         try {
@@ -81,7 +93,7 @@ export default function LoginPage() {
                             <p className="text-lg text-gray-300 mt-4">Sistem Prediksi Risiko Kesehatan Berbasis AI</p>
                         </div>
                     </div>
-                    <div className="w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+                    <div className="w-full h-px bg-linear-to-r from-transparent via-white/20 to-transparent"></div>
                     <p className="text-center text-sm text-gray-400 max-w-sm">
                         Sistem keamanan kami melindungi data kesehatan Anda dengan enkripsi tingkat enterprise
                     </p>
@@ -121,6 +133,13 @@ export default function LoginPage() {
                                     <p className="text-gray-400 text-sm">Masuk dengan email dan password Anda untuk melanjutkan</p>
                                 </div>
 
+                                {success && (
+                                    <div className="flex items-start gap-3 p-4 rounded-xl bg-green-500/20 border border-green-500/40 mb-6 backdrop-blur">
+                                        <AlertCircle className="w-5 h-5 text-green-400 mt-0.5 shrink-0" />
+                                        <p className="text-green-300 text-sm">{success}</p>
+                                    </div>
+                                )}
+
                                 {error && (
                                     <div className="flex items-start gap-3 p-4 rounded-xl bg-red-500/20 border border-red-500/40 mb-6 backdrop-blur">
                                         <AlertCircle className="w-5 h-5 text-red-400 mt-0.5 shrink-0" />
@@ -146,10 +165,18 @@ export default function LoginPage() {
                                     </div>
 
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
-                                            <Lock className="w-4 h-4 text-cyan-400" />
-                                            Password
-                                        </label>
+                                        <div className="flex items-center justify-between">
+                                            <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                                                <Lock className="w-4 h-4 text-cyan-400" />
+                                                Password
+                                            </label>
+                                            <Link
+                                                href="/auth/forgot-password"
+                                                className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors"
+                                            >
+                                                Lupa password?
+                                            </Link>
+                                        </div>
                                         <Input
                                             type="password"
                                             name="password"

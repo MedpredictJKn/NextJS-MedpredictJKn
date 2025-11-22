@@ -207,12 +207,6 @@ export default function DoctorMonitoringPage() {
                             </div>
                         </div>
                     </div>
-                    <button
-                        onClick={handleLogout}
-                        className="px-4 py-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg font-medium transition-all duration-200 border border-red-500/20 hover:border-red-500/30 text-sm"
-                    >
-                        Keluar
-                    </button>
                 </div>
             </header>
 

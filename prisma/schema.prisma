@@ -10,16 +10,22 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  name      String
-  phone     String?
-  age       Int?
-  gender    String? // 'male' | 'female'
-  role      String   @default("patient") // 'patient' | 'doctor'
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                      String    @id @default(cuid())
+  email                   String    @unique
+  password                String
+  name                    String
+  phone                   String?
+  age                     Int?
+  gender                  String? // 'male' | 'female'
+  role                    String    @default("patient") // 'patient' | 'doctor'
+  isEmailVerified         Boolean   @default(false)
+  verificationToken       String?   @unique
+  verificationTokenExpiry DateTime?
+  resetToken              String?   @unique
+  resetTokenExpiry        DateTime?
+  profilePhoto            String?
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
 
   healthData               HealthData[]
   chatHistory              ChatHistory[]
@@ -32,16 +38,16 @@ model User {
 }
 
 model DoctorMessage {
-  id        String   @id @default(cuid())
-  doctorId  String
-  doctor    User     @relation(fields: [doctorId], references: [id], onDelete: Cascade)
-  
+  id       String @id @default(cuid())
+  doctorId String
+  doctor   User   @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
   patientId String
   message   String
-  
+
   sentViaWA Boolean   @default(false)
   sentAt    DateTime?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
 
   @@map("doctor_messages")
 }

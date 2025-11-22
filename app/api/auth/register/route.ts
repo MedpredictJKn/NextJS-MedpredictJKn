@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { hashPassword, generateToken } from "@/lib/utils";
+import { hashPassword } from "@/lib/utils";
+import { sendVerificationEmail } from "@/lib/email";
+import { generateToken, getTokenExpiry } from "@/lib/token";
 import { AuthPayload, ApiResponse } from "@/types";
 
 export const runtime = "nodejs";
@@ -39,6 +41,10 @@ export async function POST(request: NextRequest) {
     // Hash password
     const hashedPassword = await hashPassword(body.password);
 
+    // Generate verification token
+    const verificationToken = generateToken();
+    const verificationTokenExpiry = getTokenExpiry(24); // 24 hours
+
     // Create user
     const user = await prisma.user.create({
       data: {
@@ -47,6 +53,9 @@ export async function POST(request: NextRequest) {
         name: body.name,
         phone: body.phone,
         role: "patient", // Default role for new registrations
+        verificationToken,
+        verificationTokenExpiry,
+        isEmailVerified: false,
       },
       select: {
         id: true,
@@ -58,18 +67,23 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Generate token
-    const token = generateToken({ userId: user.id, email: user.email });
+    // Send verification email
+    try {
+      await sendVerificationEmail(user.email, verificationToken);
+    } catch (emailError) {
+      console.error("Failed to send verification email:", emailError);
+      // Don't fail registration if email fails, but log it
+    }
 
     return NextResponse.json(
       {
         success: true,
-        message: "Registrasi berhasil",
+        message: "Registrasi berhasil. Silakan cek email Anda untuk verifikasi",
         data: {
           user,
-          token,
+          requiresVerification: true,
         },
-      } as ApiResponse<{ user: typeof user; token: string }>,
+      } as ApiResponse<{ user: typeof user; requiresVerification: boolean }>,
       { status: 201 }
     );
   } catch (error) {

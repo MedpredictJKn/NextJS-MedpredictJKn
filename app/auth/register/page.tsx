@@ -11,6 +11,8 @@ export default function RegisterPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
+    const [registered, setRegistered] = useState(false);
+    const [registeredEmail, setRegisteredEmail] = useState("");
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -44,8 +46,14 @@ export default function RegisterPage() {
                 return;
             }
 
-            // Redirect ke login page untuk verifikasi
-            router.push("/auth/login");
+            // Show success message
+            setRegistered(true);
+            setRegisteredEmail(formData.email);
+            
+            // Redirect ke login setelah 5 detik
+            setTimeout(() => {
+                router.push("/auth/login");
+            }, 5000);
         } catch (err) {
             setError(String(err) || "Terjadi kesalahan");
         } finally {
