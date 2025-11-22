@@ -2,6 +2,8 @@ import { PrismaClient } from "@prisma/client";
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
+// For Prisma 7, we need to set the PRISMA_CLIENT_ENGINE_TYPE environment variable
+// or configure it when creating the client
 export const prisma =
   globalForPrisma.prisma ||
   new PrismaClient({
@@ -9,7 +11,6 @@ export const prisma =
       process.env.NODE_ENV === "development"
         ? ["query", "error", "warn"]
         : ["error"],
-    // Disable query logging in production for performance
     errorFormat: "pretty",
   });
 
