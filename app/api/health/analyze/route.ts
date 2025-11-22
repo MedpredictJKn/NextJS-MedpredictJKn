@@ -70,11 +70,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Get Gemini API credentials
-    const apiKey = process.env.GEMINI_API_KEY;
-    const apiUrl = process.env.GEMINI_API_URL;
+    const apiKey = process.env.FAST_API_KEY;
+    const apiUrl = process.env.FAST_API_URL;
     
     if (!apiKey || !apiUrl) {
-      console.error("GEMINI_API_KEY or GEMINI_API_URL not configured");
+      console.error("FAST_API_KEY or FAST_API_URL not configured");
       return NextResponse.json(
         { success: false, message: "AI service not configured" },
         { status: 500 }

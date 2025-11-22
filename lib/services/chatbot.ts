@@ -88,13 +88,18 @@ export async function saveChatHistory(
   userId: string,
   message: string,
   response: string,
-  source: "fastapi" | "gemini"
+  source: "fastapi" | "gemini",
+  sessionId?: string
 ) {
+  // Generate sessionId if not provided
+  const finalSessionId = sessionId || `session-${Date.now()}`;
+  
   return retryWithBackoff(
     () =>
       prisma.chatHistory.create({
         data: {
           userId,
+          sessionId: finalSessionId,
           message,
           response,
           source,
@@ -193,11 +198,11 @@ export async function callFastAPIChatbot(message: string): Promise<string> {
 // Call Gemini API using URL from .env
 export async function callGeminiChatbot(message: string): Promise<string> {
   try {
-    const apiKey = process.env.GEMINI_API_KEY;
-    const apiUrl = process.env.GEMINI_API_URL;
+    const apiKey = process.env.FAST_API_KEY;
+    const apiUrl = process.env.FAST_API_URL;
 
-    if (!apiKey) throw new Error("GEMINI_API_KEY not configured");
-    if (!apiUrl) throw new Error("GEMINI_API_URL not configured");
+    if (!apiKey) throw new Error("FAST_API_KEY not configured");
+    if (!apiUrl) throw new Error("FAST_API_URL not configured");
 
     const urlWithKey = `${apiUrl}?key=${apiKey}`;
     

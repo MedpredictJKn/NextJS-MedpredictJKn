@@ -75,7 +75,7 @@ export default function RegisterPage() {
                         </div>
                         <div>
                             <h1 className="text-5xl font-bold">
-                                <span style={{ color: "#123c70", textShadow: "0 2px 8px rgba(18, 60, 112, 0.5)" }}>Medpredict</span>
+                                <span style={{ color: "#ffffff", textShadow: "0 2px 8px rgba(0, 0, 0, 0.3)" }}>Medpredict</span>
                                 <span style={{ color: "#76c04a", textShadow: "0 2px 8px rgba(118, 192, 74, 0.5)" }}>JKn</span>
                             </h1>
                             <p className="text-lg text-gray-300 mt-4">

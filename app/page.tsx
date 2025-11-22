@@ -97,7 +97,7 @@ export default function HomePage() {
               priority
             />
             <h1 className="text-2xl font-bold">
-              <span style={{ color: "#123c70", textShadow: "0 2px 8px rgba(18, 60, 112, 0.5)" }}>Medpredict</span>
+              <span style={{ color: "#ffffff", textShadow: "0 2px 8px rgba(0, 0, 0, 0.3)" }}>Medpredict</span>
               <span style={{ color: "#76c04a", textShadow: "0 2px 8px rgba(118, 192, 74, 0.5)" }}>JKn</span>
             </h1>
           </div>
@@ -128,7 +128,7 @@ export default function HomePage() {
             </span>
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            <span style={{ color: "#123c70", textShadow: "0 2px 8px rgba(18, 60, 112, 0.5)" }}>Medpredict</span>
+            <span style={{ color: "#ffffff", textShadow: "0 2px 8px rgba(0, 0, 0, 0.3)" }}>Medpredict</span>
             <span style={{ color: "#76c04a", textShadow: "0 2px 8px rgba(118, 192, 74, 0.5)" }}>JKn</span> - Sistem deteksi dini penyakit kronis berbasis data JKN dengan notifikasi WhatsApp real-time
           </p>
         </div>
@@ -240,7 +240,7 @@ export default function HomePage() {
       <footer className="border-t border-white/10 backdrop-blur-xl bg-white/5 relative z-10">
         <div className="max-w-7xl mx-auto px-8 py-12 text-center">
           <p className="text-gray-400">
-            &copy; 2025 <span style={{ color: "#123c70", textShadow: "0 2px 8px rgba(18, 60, 112, 0.5)" }}>Medpredict</span><span style={{ color: "#76c04a", textShadow: "0 2px 8px rgba(118, 192, 74, 0.5)" }}>JKn</span> - Sistem Prediksi Risiko Penyakit. Semua hak dilindungi.
+            &copy; 2025 <span style={{ color: "#ffffff", textShadow: "0 2px 8px rgba(0, 0, 0, 0.3)" }}>Medpredict</span><span style={{ color: "#76c04a", textShadow: "0 2px 8px rgba(118, 192, 74, 0.5)" }}>JKn</span> - Sistem Prediksi Risiko Penyakit. Semua hak dilindungi.
           </p>
           <p className="text-gray-500 text-sm mt-4">
             Sistem keamanan kami melindungi data kesehatan Anda dengan enkripsi tingkat enterprise

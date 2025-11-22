@@ -97,7 +97,7 @@ DATABASE_URL="postgresql://user:password@localhost:5432/healthkathon"
 JWT_SECRET="your-super-secret-jwt-key"
 
 # Gemini API (untuk Chatbot)
-GEMINI_API_KEY="your-gemini-api-key"
+FAST_API_KEY="your-gemini-api-key"
 
 # FastAPI (Opsional)
 FASTAPI_URL="http://localhost:8000"
@@ -231,7 +231,7 @@ Authorization: Bearer <token>
 
 ```typescript
 // .env.local
-GEMINI_API_KEY = "AIzaSy...";
+FAST_API_KEY = "AIzaSy...";
 
 // Dapatkan di: https://ai.google.dev/
 ```
@@ -389,7 +389,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ### Gemini API Error
 
 ```bash
-# Pastikan GEMINI_API_KEY valid
+# Pastikan FAST_API_KEY valid
 # Check API quota di https://ai.google.dev/
 ```
 

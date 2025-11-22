@@ -61,6 +61,7 @@ export default function ChatPage() {
     const [chatHistory, setChatHistory] = useState<ChatHistoryItem[]>([]);
     const [isLoadingHistory, setIsLoadingHistory] = useState(false);
     const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
+    const [currentSessionId, setCurrentSessionId] = useState<string>("");
 
     useEffect(() => {
         const storedToken = localStorage.getItem("token");
@@ -71,6 +72,8 @@ export default function ChatPage() {
         }
 
         setToken(storedToken);
+        // Initialize new session
+        setCurrentSessionId(`session-${Date.now()}`);
 
         if (storedUser) {
             try {
@@ -141,6 +144,8 @@ export default function ChatPage() {
     const startNewChat = () => {
         setMessages([]);
         setSelectedChatId(null);
+        // Create new session ID
+        setCurrentSessionId(`session-${Date.now()}`);
         setSidebarOpen(false);
     };
 
@@ -281,9 +286,9 @@ export default function ChatPage() {
             )}
 
             {/* Main Content */}
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col overflow-hidden">
                 {/* Header */}
-                <header className="sticky top-0 z-40 backdrop-blur-xl bg-white/5 border-b border-white/10">
+                <header className="sticky top-0 z-40 backdrop-blur-xl bg-white/5 border-b border-white/10 shrink-0">
                     <div className="h-[70px] px-8 flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="bg-linear-to-r from-purple-500 to-pink-500 p-2 rounded-lg">
@@ -314,7 +319,7 @@ export default function ChatPage() {
                 </header>
 
                 {/* Main Chat Area */}
-                <div className="flex-1 flex flex-col p-8 relative z-10 overflow-hidden">
+                <div className="flex-1 flex flex-col p-8 relative z-10 overflow-y-auto">
                     {/* Empty State */}
                     {messages.length === 0 && (
                         <div className="flex-1 flex items-center justify-center mb-8">
@@ -352,7 +357,7 @@ export default function ChatPage() {
 
                     {/* Messages */}
                     {messages.length > 0 && (
-                        <div className="flex-1 flex flex-col mb-8 overflow-y-auto pr-4">
+                        <div className="flex-1 flex flex-col mb-8 pr-4">
                             <div className="space-y-4 flex flex-col">
                                 {messages.map((message, index) => (
                                     <div
