@@ -79,7 +79,7 @@ export function Sidebar({ onLogout, userName, userEmail, userRole, profilePhoto 
                     </div>
                     <div className="flex-1 min-w-0 text-center">
                         <h2 className="text-xl font-bold text-white leading-tight tracking-tight">
-                            <span style={{ color: "#123c70", textShadow: "0 2px 8px rgba(18, 60, 112, 0.5)" }}>Medpredict</span><span style={{ color: "#76c04a", textShadow: "0 2px 8px rgba(118, 192, 74, 0.5)" }}>JKn</span>
+                            <span style={{ color: "#ffffff", textShadow: "0 2px 8px rgba(0, 0, 0, 0.3)" }}>Medpredict</span><span style={{ color: "#76c04a", textShadow: "0 2px 8px rgba(118, 192, 74, 0.5)" }}>JKn</span>
                         </h2>
                     </div>
                 </Link>

@@ -34,6 +34,8 @@ interface HealthMetric {
 export default function DashboardPage() {
     const router = useRouter();
     const [user, setUser] = useState<User | null>(null);
+    
+    // State Data
     const [patientCount, setPatientCount] = useState(0);
     const [activeMonitoring, setActiveMonitoring] = useState(0);
     const [totalPemeriksaan, setTotalPemeriksaan] = useState(0);
@@ -48,11 +50,29 @@ export default function DashboardPage() {
     } | null>(null);
     const [wellnessScore, setWellnessScore] = useState(0);
 
-    // Animated counter values
+    // --- LOGIC UNTUK MEMECAH TEKANAN DARAH ---
+    // Jika data ada, split "120/80" menjadi [120, 80]. Jika tidak, default 0.
+    const [targetSystole, targetDiastole] = latestHealth?.bloodPressure 
+        ? latestHealth.bloodPressure.split('/').map(Number) 
+        : [0, 0];
+
+    // --- ANIMATION HOOKS ---
+    
+    // 1. Tekanan Darah (Dianimasikan terpisah)
+    const animatedSystole = useCounterAnimation(targetSystole || 0, 1500);
+    const animatedDiastole = useCounterAnimation(targetDiastole || 0, 1500);
+
+    // 2. Global / Patient Stats
     const animatedTotalPemeriksaan = useCounterAnimation(totalPemeriksaan, 1500);
     const animatedTotalChat = useCounterAnimation(totalChat, 1500);
     const animatedAlertAktif = useCounterAnimation(alertAktif, 1500);
-    const animatedWellnessScore = useCounterAnimation(wellnessScore, 1500);
+    
+    // 3. Doctor Stats
+    const animatedPatientCount = useCounterAnimation(patientCount, 1500);
+    const animatedActiveMonitoring = useCounterAnimation(activeMonitoring, 1500);
+
+    // 4. Health Metrics Lainnya (Patient)
+    const animatedWellnessScore = useCounterAnimation(wellnessScore, 2000);
     const animatedBMI = useProgressAnimation(latestHealth?.bmi ?? 0, 1500);
     const animatedBloodSugar = useCounterAnimation(latestHealth?.bloodSugar ?? 0, 1500);
     const animatedCholesterol = useCounterAnimation(latestHealth?.cholesterol ?? 0, 1500);
@@ -106,6 +126,7 @@ export default function DashboardPage() {
                             const response = await fetch("/api/doctor/patients", {
                                 headers: {
                                     "Authorization": `Bearer ${storedToken}`,
+                                    "Cache-Control": "no-cache"
                                 },
                             });
 
@@ -113,7 +134,6 @@ export default function DashboardPage() {
                                 const data = await response.json();
                                 if (isMounted && data.data) {
                                     setPatientCount(data.data.length);
-                                    // Count patients with health data
                                     const withHealthData = data.data.filter((p: { latestHealth: Record<string, unknown> | null }) => p.latestHealth).length;
                                     setActiveMonitoring(withHealthData);
                                 }
@@ -147,41 +167,41 @@ export default function DashboardPage() {
     const patientQuickStats = [
         {
             label: "Total Pemeriksaan",
-            value: String(totalPemeriksaan),
+            value: animatedTotalPemeriksaan,
             icon: Activity,
             color: "bg-blue-500",
         },
         {
             label: "Chat AI",
-            value: String(totalChat),
+            value: animatedTotalChat,
             icon: MessageCircle,
             color: "bg-purple-500",
         },
         {
             label: "Alert Aktif",
-            value: String(alertAktif),
+            value: animatedAlertAktif,
             icon: AlertCircle,
             color: "bg-orange-500",
         },
     ];
 
-    // Doctor quick stats (dynamic based on fetched data)
+    // Doctor quick stats
     const doctorQuickStats = [
         {
             label: "Total Pasien",
-            value: String(patientCount),
+            value: animatedPatientCount,
             icon: Users,
             color: "bg-green-500",
         },
         {
             label: "Monitoring Aktif",
-            value: String(activeMonitoring),
+            value: animatedActiveMonitoring,
             icon: AlertCircle,
             color: "bg-orange-500",
         },
         {
             label: "Pesan Terkirim",
-            value: "45",
+            value: 45, 
             icon: MessageCircle,
             color: "bg-blue-500",
         },
@@ -189,10 +209,14 @@ export default function DashboardPage() {
 
     const quickStats = isDoctor ? doctorQuickStats : patientQuickStats;
 
+    // Health Metrics dengan animasi LENGKAP
     const healthMetrics: HealthMetric[] = latestHealth ? [
         {
             name: "Tekanan Darah",
-            value: latestHealth.bloodPressure || "N/A",
+            // Disini kita gabungkan kembali Systole dan Diastole yang sudah dianimasikan
+            value: latestHealth.bloodPressure 
+                ? `${Math.round(animatedSystole)}/${Math.round(animatedDiastole)}` 
+                : "0/A",
             unit: "mmHg",
             status: latestHealth.bloodPressure
                 ? (() => {
@@ -203,13 +227,13 @@ export default function DashboardPage() {
         },
         {
             name: "BMI",
-            value: latestHealth.bmi.toFixed(1),
+            value: animatedBMI.toFixed(1),
             unit: "kg/m²",
             status: latestHealth.bmi < 18.5 || latestHealth.bmi > 24.9 ? "warning" : "normal"
         },
         {
             name: "Gula Darah",
-            value: latestHealth.bloodSugar?.toString() || "N/A",
+            value: Math.round(animatedBloodSugar).toString(),
             unit: "mg/dL",
             status: latestHealth.bloodSugar
                 ? latestHealth.bloodSugar > 200 || latestHealth.bloodSugar < 70 ? "critical" : latestHealth.bloodSugar > 140 || latestHealth.bloodSugar < 100 ? "warning" : "normal"
@@ -217,20 +241,19 @@ export default function DashboardPage() {
         },
         {
             name: "Kolesterol",
-            value: latestHealth.cholesterol?.toString() || "N/A",
+            value: Math.round(animatedCholesterol).toString(),
             unit: "mg/dL",
             status: latestHealth.cholesterol
                 ? latestHealth.cholesterol > 240 ? "critical" : latestHealth.cholesterol > 200 ? "warning" : "normal"
                 : "normal"
         },
     ] : [
-        { name: "Tekanan Darah", value: "N/A", unit: "mmHg", status: "normal" },
-        { name: "BMI", value: "N/A", unit: "kg/m²", status: "normal" },
-        { name: "Gula Darah", value: "N/A", unit: "mg/dL", status: "normal" },
-        { name: "Kolesterol", value: "N/A", unit: "mg/dL", status: "normal" },
+        { name: "Tekanan Darah", value: "0/0", unit: "mmHg", status: "normal" },
+        { name: "BMI", value: "0.0", unit: "kg/m²", status: "normal" },
+        { name: "Gula Darah", value: "0", unit: "mg/dL", status: "normal" },
+        { name: "Kolesterol", value: "0", unit: "mg/dL", status: "normal" },
     ];
 
-    // Patient services
     const patientServices = [
         {
             title: "Cek Kesehatan",
@@ -252,7 +275,6 @@ export default function DashboardPage() {
         },
     ];
 
-    // Doctor services
     const doctorServices = [
         {
             title: "Monitoring Pasien",
@@ -319,12 +341,6 @@ export default function DashboardPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {quickStats.map((stat, idx) => {
                             const Icon = stat.icon;
-                            let displayValue = stat.value;
-
-                            if (idx === 0) displayValue = String(animatedTotalPemeriksaan);
-                            else if (idx === 1) displayValue = String(animatedTotalChat);
-                            else if (idx === 2) displayValue = String(animatedAlertAktif);
-
                             return (
                                 <div
                                     key={idx}
@@ -337,7 +353,7 @@ export default function DashboardPage() {
                                             </div>
                                         </div>
                                         <p className="text-gray-400 text-xs font-semibold uppercase tracking-wide">{stat.label}</p>
-                                        <p className="text-3xl font-bold text-white mt-2">{displayValue}</p>
+                                        <p className="text-3xl font-bold text-white mt-2">{stat.value}</p>
                                     </div>
                                 </div>
                             );
@@ -371,7 +387,7 @@ export default function DashboardPage() {
                                                     </div>
                                                     <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                                                         <div
-                                                            className={`h-full ${metric.status === "normal"
+                                                            className={`h-full transition-all duration-1000 ${metric.status === "normal"
                                                                 ? "bg-green-500"
                                                                 : metric.status === "warning"
                                                                     ? "bg-yellow-500"
@@ -397,11 +413,11 @@ export default function DashboardPage() {
 
                                     <div className="relative z-10 h-full flex flex-col">
                                         <p className="text-gray-400 text-sm font-semibold uppercase tracking-wide mb-3">Wellness Score</p>
-                                        <div className="text-4xl font-bold text-white mb-4">{wellnessScore}/100</div>
+                                        <div className="text-4xl font-bold text-white mb-4">{Math.round(animatedWellnessScore)}/100</div>
                                         <div className="h-2 bg-white/10 rounded-full overflow-hidden mb-3">
                                             <div
-                                                className="h-full bg-linear-to-r from-green-500 to-emerald-500"
-                                                style={{ width: `${wellnessScore}%` }}
+                                                className="h-full bg-linear-to-r from-green-500 to-emerald-500 transition-all duration-100 ease-out"
+                                                style={{ width: `${animatedWellnessScore}%` }}
                                             />
                                         </div>
                                         <p className={`text-xs font-semibold mt-auto ${wellnessScore >= 80 ? "text-green-300" : wellnessScore >= 60 ? "text-yellow-300" : "text-red-300"
