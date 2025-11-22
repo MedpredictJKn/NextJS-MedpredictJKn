@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
     if (patient.phone) {
       try {
         const waResponse = await fetch(
-          `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/api/notify-wa`,
+          `${process.env.NEXTAUTH_URL || "https://medpredictjkn.vercel.app"}/api/notify-wa`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
