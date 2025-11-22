@@ -22,6 +22,7 @@ interface HealthData {
     bloodPressure: string | null;
     bloodSugar: number | null;
     cholesterol: number | null;
+    notes: string | null;
     createdAt: Date;
 }
 
@@ -33,6 +34,7 @@ interface Patient {
     age: number | null;
     gender: string | null;
     latestHealth: HealthData | null;
+    healthHistory: HealthData[];
 }
 
 export default function DoctorMonitoringPage() {
@@ -281,34 +283,121 @@ export default function DoctorMonitoringPage() {
                                     </div>
 
                                     {selectedPatient.latestHealth ? (
-                                        <div className="grid grid-cols-3 gap-4">
-                                            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                                                <p className="text-xs text-gray-400 mb-2">BMI</p>
-                                                <p className="text-2xl font-bold text-white">
-                                                    {selectedPatient.latestHealth.bmi}
-                                                </p>
-                                                <div
-                                                    className={`inline-block mt-2 px-3 py-1 rounded-full text-xs font-medium border ${getBMIColor(
-                                                        selectedPatient.latestHealth.status
-                                                    )}`}
-                                                >
-                                                    {getBMILabel(selectedPatient.latestHealth.status)}
+                                        <div className="space-y-6">
+                                            {/* BMI Summary Cards */}
+                                            <div className="grid grid-cols-3 gap-4">
+                                                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                                                    <p className="text-xs text-gray-400 mb-2">BMI</p>
+                                                    <p className="text-2xl font-bold text-white">
+                                                        {selectedPatient.latestHealth.bmi.toFixed(1)}
+                                                    </p>
+                                                    <div
+                                                        className={`inline-block mt-2 px-3 py-1 rounded-full text-xs font-medium border ${getBMIColor(
+                                                            selectedPatient.latestHealth.status
+                                                        )}`}
+                                                    >
+                                                        {getBMILabel(selectedPatient.latestHealth.status)}
+                                                    </div>
+                                                </div>
+                                                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                                                    <p className="text-xs text-gray-400 mb-2">Tinggi/Berat</p>
+                                                    <p className="text-lg font-bold text-white">
+                                                        {selectedPatient.latestHealth.height} cm / {selectedPatient.latestHealth.weight} kg
+                                                    </p>
+                                                </div>
+                                                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                                                    <p className="text-xs text-gray-400 mb-2">Data Terakhir</p>
+                                                    <p className="text-sm font-medium text-white">
+                                                        {new Date(selectedPatient.latestHealth.createdAt).toLocaleDateString(
+                                                            "id-ID"
+                                                        )}
+                                                    </p>
                                                 </div>
                                             </div>
-                                            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                                                <p className="text-xs text-gray-400 mb-2">Tinggi/Berat</p>
-                                                <p className="text-lg font-bold text-white">
-                                                    {selectedPatient.latestHealth.height} cm / {selectedPatient.latestHealth.weight} kg
-                                                </p>
+
+                                            {/* Vital Signs */}
+                                            <div className="space-y-4">
+                                                <h4 className="text-sm font-bold text-white">Tanda Vital</h4>
+                                                <div className="grid grid-cols-3 gap-4">
+                                                    {/* Blood Pressure */}
+                                                    <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                                                        <p className="text-xs text-gray-400 mb-2">Tekanan Darah</p>
+                                                        <p className="text-lg font-bold text-white">
+                                                            {selectedPatient.latestHealth.bloodPressure || "—"}
+                                                        </p>
+                                                        <p className="text-xs text-gray-500 mt-1">Format: Sistole/Diastole</p>
+                                                        {selectedPatient.latestHealth.bloodPressure && (
+                                                            <p className="text-xs text-gray-500 mt-2">Ideal: &lt;120/80 mmHg</p>
+                                                        )}
+                                                    </div>
+
+                                                    {/* Blood Sugar */}
+                                                    <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                                                        <p className="text-xs text-gray-400 mb-2">Gula Darah</p>
+                                                        <p className="text-lg font-bold text-white">
+                                                            {selectedPatient.latestHealth.bloodSugar ? `${selectedPatient.latestHealth.bloodSugar} mg/dL` : "—"}
+                                                        </p>
+                                                        {selectedPatient.latestHealth.bloodSugar && (
+                                                            <div className="text-xs text-gray-500 mt-2">
+                                                                <p>Puasa: 70-100 mg/dL</p>
+                                                                {selectedPatient.latestHealth.bloodSugar > 100 && (
+                                                                    <p className="text-yellow-400 mt-1">⚠️ Tinggi</p>
+                                                                )}
+                                                            </div>
+                                                        )}
+                                                    </div>
+
+                                                    {/* Cholesterol */}
+                                                    <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                                                        <p className="text-xs text-gray-400 mb-2">Kolesterol</p>
+                                                        <p className="text-lg font-bold text-white">
+                                                            {selectedPatient.latestHealth.cholesterol ? `${selectedPatient.latestHealth.cholesterol} mg/dL` : "—"}
+                                                        </p>
+                                                        {selectedPatient.latestHealth.cholesterol && (
+                                                            <div className="text-xs text-gray-500 mt-2">
+                                                                <p>Target: &lt;200 mg/dL</p>
+                                                                {selectedPatient.latestHealth.cholesterol >= 200 && (
+                                                                    <p className="text-red-400 mt-1">⚠️ Tinggi</p>
+                                                                )}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                                                <p className="text-xs text-gray-400 mb-2">Data Terakhir</p>
-                                                <p className="text-sm font-medium text-white">
-                                                    {new Date(selectedPatient.latestHealth.createdAt).toLocaleDateString(
-                                                        "id-ID"
-                                                    )}
-                                                </p>
-                                            </div>
+
+                                            {/* Notes */}
+                                            {selectedPatient.latestHealth.notes && (
+                                                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                                                    <p className="text-xs text-gray-400 mb-2">Catatan & Keterangan</p>
+                                                    <p className="text-sm text-gray-300 whitespace-pre-wrap">{selectedPatient.latestHealth.notes}</p>
+                                                </div>
+                                            )}
+
+                                            {/* Health History */}
+                                            {selectedPatient.healthHistory && selectedPatient.healthHistory.length > 1 && (
+                                                <div className="space-y-4">
+                                                    <h4 className="text-sm font-bold text-white">Riwayat Kesehatan</h4>
+                                                    <div className="max-h-[300px] overflow-y-auto space-y-2">
+                                                        {selectedPatient.healthHistory.map((health) => (
+                                                            <div key={health.id} className="bg-white/5 rounded-lg p-3 border border-white/10 text-sm">
+                                                                <div className="flex justify-between items-start">
+                                                                    <div>
+                                                                        <p className="text-gray-300 font-medium">BMI: {health.bmi.toFixed(1)} • {getBMILabel(health.status)}</p>
+                                                                        <p className="text-xs text-gray-400 mt-1">
+                                                                            {health.height}cm • {health.weight}kg
+                                                                            {health.bloodPressure && ` • TD: ${health.bloodPressure}`}
+                                                                            {health.bloodSugar && ` • Gula: ${health.bloodSugar}`}
+                                                                        </p>
+                                                                    </div>
+                                                                    <p className="text-xs text-gray-500">
+                                                                        {new Date(health.createdAt).toLocaleDateString("id-ID")}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     ) : (
                                         <div className="text-center py-8 text-gray-400">

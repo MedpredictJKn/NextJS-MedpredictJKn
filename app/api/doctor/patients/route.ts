@@ -22,8 +22,21 @@ interface PatientWithHealth {
     bloodPressure: string | null;
     bloodSugar: number | null;
     cholesterol: number | null;
+    notes: string | null;
     createdAt: Date;
   } | null;
+  healthHistory: {
+    id: string;
+    height: number;
+    weight: number;
+    bmi: number;
+    status: string;
+    bloodPressure: string | null;
+    bloodSugar: number | null;
+    cholesterol: number | null;
+    notes: string | null;
+    createdAt: Date;
+  }[];
 }
 
 export async function GET(request: NextRequest) {
@@ -60,7 +73,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get all patients with latest health data
+    // Get all patients with latest health data and history
     const patients = await prisma.user.findMany({
       where: { role: "patient" },
       select: {
@@ -72,7 +85,6 @@ export async function GET(request: NextRequest) {
         gender: true,
         healthData: {
           orderBy: { createdAt: "desc" },
-          take: 1,
           select: {
             id: true,
             height: true,
@@ -82,6 +94,7 @@ export async function GET(request: NextRequest) {
             bloodPressure: true,
             bloodSugar: true,
             cholesterol: true,
+            notes: true,
             createdAt: true,
           },
         },
@@ -97,6 +110,7 @@ export async function GET(request: NextRequest) {
       age: patient.age,
       gender: patient.gender,
       latestHealth: patient.healthData[0] || null,
+      healthHistory: patient.healthData || [],
     }));
 
     return NextResponse.json(
