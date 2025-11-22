@@ -117,70 +117,38 @@ export async function getChatHistory(userId: string, limit: number = 20) {
   });
 }
 
-// Deteksi apakah user melaporkan gejala kesehatan atau bertanya tentang penyakit
-function isHealthRelated(userMessage: string): boolean {
-  const lowerMessage = userMessage.toLowerCase();
-  const healthKeywords = [
-    "sakit", "nyeri", "demam", "batuk", "pilek", "pusing", "lemas", "lelah",
-    "sesak", "napas", "dada", "perut", "mual", "muntah", "diare", "sembelit",
-    "sakit kepala", "sakit gigi", "sering buang air", "ruam", "gatal", "bengkak",
-    "berkeringat", "tidur", "nafsu makan", "berat badan", "haus",
-    "bab", "buang air", "gejala", "keluhan", "penyakit", "mengalami", "terasa",
-    "diabetes", "hipertensi", "jantung", "kolesterol", "tekanan darah", "gula darah",
-    "obesitas", "bmi", "berat badan", "risiko", "diagnosa", "penyakit kronis"
-  ];
-  
-  return healthKeywords.some(keyword => lowerMessage.includes(keyword));
-}
-
 // Function untuk prediksi penyakit berdasarkan gejala
 export function getEnhancedPrompt(userMessage: string): string {
-  // Deteksi apakah pertanyaan berhubungan dengan kesehatan/penyakit
-  const isHealth = isHealthRelated(userMessage);
-  
-  if (isHealth) {
-    return `Anda adalah dokter/tenaga kesehatan yang ahli dalam prediksi risiko penyakit kronis berdasarkan gejala dan riwayat kesehatan.
+  return `Anda adalah dokter/tenaga kesehatan yang ahli dalam prediksi risiko penyakit kronis berdasarkan gejala dan riwayat kesehatan.
 
-PENYAKIT UMUM YANG DIPREDIKSI (Berdasarkan Model Prediksi Dini Risiko Penyakit MedpredictJKn):
+PENYAKIT YANG DIPREDIKSI:
 1. Diabetes Melitus Tipe 2 (DMT2)
 2. Hipertensi (Tekanan Darah Tinggi)
 3. Penyakit Jantung Koroner (PJK)
 
-MODEL PREDIKSI:
-AI/Machine Learning dilatih menggunakan dataset JKN (riwayat diagnosa, obat, kunjungan, hasil lab) untuk menghitung skor risiko individual (0-100 scale) untuk penyakit-penyakit umum tersebut.
-
 TUGAS ANDA:
 1. Analisis gejala atau kondisi kesehatan yang dilaporkan user
-2. Prediksi penyakit mana (dari ketiga penyakit umum di atas) yang paling relevan berdasarkan gejala
+2. Prediksi penyakit mana dari ketiga penyakit di atas yang relevan berdasarkan gejala (bisa 1, 2, atau 3 penyakit)
 3. Jelaskan hubungan antara gejala dengan penyakit yang diprediksi
 4. Berikan penjelasan singkat tentang penyakit tersebut
 5. Berikan saran umum tentang pencegahan atau pengelolaan kesehatan
 
 INSTRUKSI PENTING:
-- Hanya prediksi dari 3 penyakit utama: Diabetes Melitus Tipe 2, Hipertensi, atau Penyakit Jantung Koroner
+- Hanya prediksi dari 3 penyakit: Diabetes Melitus Tipe 2, Hipertensi, atau Penyakit Jantung Koroner
+- Prediksi bisa 1, 2, atau 3 penyakit tergantung relevansi dengan gejala user
 - Jangan berikan diagnosis resmi atau resep obat
 - Balas dalam Bahasa Indonesia yang jelas dan mudah dipahami
-- Fokus pada analisis gejala dan prediksi penyakit, bukan mengarahkan ke menu atau fitur lain
-- Jika gejala tidak jelas, minta informasi tambahan untuk analisis yang lebih akurat
+- Fokus pada analisis gejala dan prediksi penyakit
 
 Gejala/Kondisi Pengguna: ${userMessage}
 
-Berikan prediksi penyakit berdasarkan gejala di atas.`;
-  } else {
-    return `Anda adalah asisten kesehatan yang ahli dalam prediksi penyakit kronis.
-
-Pertanyaan pengguna tidak spesifik tentang gejala atau kondisi kesehatan. Balas dengan singkat dan jelas dalam Bahasa Indonesia, dan tanyakan lebih detail tentang kondisi kesehatan mereka.
-
-Pertanyaan: ${userMessage}
-
-Berikan respons yang ramah dan dorong user untuk berbagi gejala atau kondisi kesehatan mereka agar Anda bisa memberikan prediksi yang lebih akurat tentang risiko penyakit (Diabetes Melitus Tipe 2, Hipertensi, atau Penyakit Jantung Koroner).`;
-  }
+Berikan prediksi penyakit berdasarkan informasi di atas.`;
 }
 
 // Mock function - replace dengan actual FastAPI call
 export async function callFastAPIChatbot(message: string): Promise<string> {
   try {
-    const fastApiUrl = process.env.FASTAPI_URL || "http://localhost:8000";
+    const fastApiUrl = process.env.FASTAPI_URL || "https://medpredictjkn.vercel.app";
     const response = await fetch(`${fastApiUrl}/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
