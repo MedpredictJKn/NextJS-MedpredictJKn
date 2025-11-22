@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { ProfileAvatar } from "@/components/ui/profile-avatar";
 import { AlertCircle, Send, MessageCircle, User, Bot, ArrowLeft, Loader, Menu, X, Clock, Plus } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 interface User {
     id: string;
     name: string;
