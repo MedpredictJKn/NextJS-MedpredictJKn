@@ -3,20 +3,22 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Activity, MessageCircle, LogOut, LayoutDashboard } from 'lucide-react';
+import { Activity, MessageCircle, LogOut, LayoutDashboard, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface SidebarProps {
     onLogout: () => void;
     userName?: string;
     userEmail?: string;
+    userRole?: string;
     profilePhoto?: string;
 }
 
-export function Sidebar({ onLogout, userName, userEmail, profilePhoto }: SidebarProps) {
+export function Sidebar({ onLogout, userName, userEmail, userRole, profilePhoto }: SidebarProps) {
     const pathname = usePathname();
 
-    const navItems = [
+    // Patient navigation items
+    const patientNavItems = [
         {
             label: 'Dashboard',
             href: '/dashboard',
@@ -34,10 +36,25 @@ export function Sidebar({ onLogout, userName, userEmail, profilePhoto }: Sidebar
         },
     ];
 
+    // Doctor navigation items
+    const doctorNavItems = [
+        {
+            label: 'Dashboard',
+            href: '/dashboard',
+            icon: LayoutDashboard,
+        },
+        {
+            label: 'Monitoring',
+            href: '/doctor/monitoring',
+            icon: Users,
+        }
+    ];
+
+    const navItems = userRole === 'doctor' ? doctorNavItems : patientNavItems;
     const isActive = (href: string) => pathname === href;
 
     return (
-        <aside className="fixed left-0 top-0 h-screen w-64 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-r border-white/10 flex flex-col backdrop-blur-xl overflow-hidden">
+        <aside className="fixed left-0 top-0 h-screen w-64 bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 border-r border-white/10 flex flex-col backdrop-blur-xl overflow-hidden">
             {/* Background Effects */}
             <div className="absolute top-20 left-0 w-80 h-80 bg-purple-500/15 rounded-full blur-3xl pointer-events-none"></div>
             <div className="absolute bottom-20 right-0 w-80 h-80 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none"></div>
@@ -89,13 +106,15 @@ export function Sidebar({ onLogout, userName, userEmail, profilePhoto }: Sidebar
             <div className="p-4 space-y-3 border-t border-white/10 relative z-10">
                 {/* User Info */}
                 {userName && (
-                    <Link href="/profil" className="block px-4 py-4 bg-gradient-to-br from-blue-500/20 to-cyan-500/10 rounded-lg hover:from-blue-500/30 hover:to-cyan-500/20 transition-all duration-200 border border-blue-400/30 hover:border-blue-400/50 cursor-pointer group">
+                    <Link href="/profil" className="block px-4 py-4 bg-linear-to-br from-blue-500/20 to-cyan-500/10 rounded-lg hover:from-blue-500/30 hover:to-cyan-500/20 transition-all duration-200 border border-blue-400/30 hover:border-blue-400/50 cursor-pointer group">
                         <div className="flex items-center gap-3 mb-3">
-                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center shrink-0 shadow-lg shadow-blue-500/30 group-hover:shadow-blue-500/50 transition-all overflow-hidden">
+                            <div className="w-12 h-12 rounded-full bg-linear-to-br from-blue-500 to-cyan-400 flex items-center justify-center shrink-0 shadow-lg shadow-blue-500/30 group-hover:shadow-blue-500/50 transition-all overflow-hidden">
                                 {profilePhoto ? (
-                                    <img
+                                    <Image
                                         src={profilePhoto}
                                         alt={userName}
+                                        width={48}
+                                        height={48}
                                         className="w-full h-full object-cover"
                                     />
                                 ) : (

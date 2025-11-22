@@ -70,6 +70,7 @@ export async function POST(request: NextRequest) {
             phone: user.phone,
             age: user.age,
             gender: user.gender,
+            role: user.role,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
           },
@@ -83,6 +84,7 @@ export async function POST(request: NextRequest) {
           phone: string | null;
           age: number | null;
           gender: string | null;
+          role: string;
           createdAt: Date;
           updatedAt: Date;
         };

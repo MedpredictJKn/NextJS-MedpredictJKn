@@ -19,6 +19,7 @@ interface User {
     name: string;
     email: string;
     phone?: string;
+    role?: string;
     profilePhoto?: string;
 }
 
@@ -118,7 +119,7 @@ export default function DashboardPage() {
             <div className="fixed bottom-0 right-1/4 w-96 h-96 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none z-0"></div>
 
             {/* Sidebar */}
-            <Sidebar onLogout={handleLogout} userName={user?.name} userEmail={user?.email} />
+            <Sidebar onLogout={handleLogout} userName={user?.name} userEmail={user?.email} userRole={user?.role} />
 
             {/* Main Content */}
             <main className="flex-1 ml-64 relative z-10">

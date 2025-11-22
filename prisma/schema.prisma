@@ -18,6 +18,7 @@ model User {
   phone     String?
   age       Int?
   gender    String? // 'male' | 'female'
+  role      String   @default("patient") // 'patient' | 'doctor'
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -26,8 +27,24 @@ model User {
   medicalRecords           MedicalRecord[]
   riskScores               DiseaseRiskScore?
   screeningRecommendations ScreeningRecommendation[]
+  sentMessages             DoctorMessage[]
 
   @@map("users")
+}
+
+model DoctorMessage {
+  id        String   @id @default(cuid())
+  doctorId  String
+  doctor    User     @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  
+  patientId String
+  message   String
+  
+  sentViaWA Boolean   @default(false)
+  sentAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@map("doctor_messages")
 }
 
 model HealthData {

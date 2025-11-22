@@ -46,12 +46,14 @@ export async function POST(request: NextRequest) {
         password: hashedPassword,
         name: body.name,
         phone: body.phone,
+        role: "patient", // Default role for new registrations
       },
       select: {
         id: true,
         email: true,
         name: true,
         phone: true,
+        role: true,
         createdAt: true,
       },
     });

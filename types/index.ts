@@ -33,6 +33,7 @@ export interface User {
   phone?: string;
   age?: number;
   gender?: string;
+  role: string; // 'patient' | 'doctor'
   createdAt: Date;
   updatedAt: Date;
 }
