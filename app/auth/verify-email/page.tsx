@@ -29,7 +29,6 @@ export default function VerifyEmailPage() {
                     if (data.success) {
                         setStatus("success");
                         setMessage(data.message);
-                        // Redirect to login after 3 seconds
                         setTimeout(() => router.push("/auth/login"), 3000);
                     } else {
                         setStatus("error");
@@ -53,62 +52,62 @@ export default function VerifyEmailPage() {
     }, [token, router]);
 
     return (
-        <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
-            {/* Background Effects */}
-            <div className="fixed top-0 left-1/4 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl pointer-events-none z-0"></div>
-            <div className="fixed bottom-0 right-1/4 w-96 h-96 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none z-0"></div>
+        <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4 relative">
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl"></div>
 
-            {/* Content */}
-            <div className="relative z-10 max-w-md w-full">
-                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 text-center space-y-6">
-                    {/* Icon */}
-                    {status === "loading" && (
-                        <div className="flex justify-center">
-                            <Loader className="w-12 h-12 text-blue-400 animate-spin" />
-                        </div>
-                    )}
-                    {status === "success" && (
-                        <div className="flex justify-center">
-                            <CheckCircle className="w-12 h-12 text-green-400" />
-                        </div>
-                    )}
-                    {status === "error" && (
-                        <div className="flex justify-center">
-                            <XCircle className="w-12 h-12 text-red-400" />
-                        </div>
-                    )}
+            <div className="w-full max-w-7xl flex gap-8 relative z-10 h-auto md:h-screen md:max-h-screen md:items-center">
+                <div className="hidden md:w-1/2 md:flex"></div>
+                <div className="w-full md:w-1/2 flex items-center justify-center py-8 md:py-0">
+                    <div className="w-full max-w-md">
+                        <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 p-8 shadow-2xl h-auto md:h-[500px] flex flex-col justify-center">
+                            <div className="absolute top-0 right-0 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl" />
 
-                    {/* Message */}
-                    <div>
-                        <h1 className="text-2xl font-bold text-white mb-2">
-                            {status === "loading" && "Memverifikasi Email..."}
-                            {status === "success" && "Email Terverifikasi!"}
-                            {status === "error" && "Verifikasi Gagal"}
-                        </h1>
-                        <p className="text-gray-300">{message}</p>
-                    </div>
+                            <div className="relative z-10 text-center space-y-6">
+                                {/* Icon */}
+                                {status === "loading" && (
+                                    <Loader className="w-12 h-12 text-blue-400 animate-spin mx-auto" />
+                                )}
+                                {status === "success" && (
+                                    <CheckCircle className="w-12 h-12 text-green-400 mx-auto" />
+                                )}
+                                {status === "error" && (
+                                    <XCircle className="w-12 h-12 text-red-400 mx-auto" />
+                                )}
 
-                    {/* Actions */}
-                    <div className="space-y-3 pt-4">
-                        <Link
-                            href="/auth/login"
-                            className="block w-full bg-linear-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-medium py-2 rounded-lg transition-all duration-200"
-                        >
-                            Kembali ke Login
-                        </Link>
-                        <Link
-                            href="/auth/register"
-                            className="block w-full bg-white/10 hover:bg-white/20 text-white font-medium py-2 rounded-lg transition-all duration-200 border border-white/20"
-                        >
-                            Daftar Akun Baru
-                        </Link>
+                                {/* Title & Message */}
+                                <div className="space-y-3">
+                                    <h1 className="text-2xl font-bold text-white">
+                                        {status === "loading" && "Memverifikasi Email..."}
+                                        {status === "success" && "Email Terverifikasi!"}
+                                        {status === "error" && "Verifikasi Gagal"}
+                                    </h1>
+                                    <p className="text-gray-300 text-sm">{message}</p>
+                                </div>
+
+                                {/* Actions */}
+                                {status !== "loading" && (
+                                    <div className="space-y-2 pt-4">
+                                        <Link
+                                            href="/auth/login"
+                                            className="block w-full bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium py-2 rounded-lg transition-all duration-200"
+                                        >
+                                            Kembali ke Login
+                                        </Link>
+                                        {status === "error" && (
+                                            <Link
+                                                href="/auth/register"
+                                                className="block w-full bg-white/10 hover:bg-white/20 text-white font-medium py-2 rounded-lg transition-all duration-200 border border-white/20"
+                                            >
+                                                Daftar Ulang
+                                            </Link>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                {/* Footer */}
-                <p className="text-center text-gray-400 text-sm mt-6">
-                    Butuh bantuan? <Link href="/contact" className="text-cyan-400 hover:text-cyan-300">Hubungi kami</Link>
-                </p>
             </div>
         </div>
     );

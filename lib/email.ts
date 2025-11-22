@@ -121,3 +121,49 @@ export async function sendPasswordResetEmail(email: string, token: string) {
     html,
   });
 }
+
+export async function sendPasswordResetCodeEmail(email: string, code: string) {
+  const html = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 20px; border-radius: 10px 10px 0 0; }
+          .content { background: #f9f9f9; padding: 20px; border-radius: 0 0 10px 10px; }
+          .code-box { background: white; border: 2px solid #f5576c; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0; font-size: 32px; letter-spacing: 8px; font-weight: bold; color: #f5576c; font-family: monospace; }
+          .footer { margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #666; }
+          .warning { background: #fff3cd; border-left: 4px solid #ffc107; padding: 10px; margin: 10px 0; border-radius: 3px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>Kode Reset Password</h1>
+          </div>
+          <div class="content">
+            <p>Halo,</p>
+            <p>Kami menerima permintaan untuk mengatur ulang password akun Anda. Gunakan kode di bawah untuk melanjutkan:</p>
+            <div class="code-box">${code}</div>
+            <p>Masukkan kode ini di aplikasi untuk mengatur ulang password Anda.</p>
+            <div class="warning">
+              <strong>⚠️ Keamanan:</strong> Kode ini berlaku selama 10 menit. Jangan bagikan kode ini kepada siapa pun.
+            </div>
+            <div class="footer">
+              <p>Jika Anda tidak meminta reset password ini, abaikan email ini dan password Anda akan tetap aman.</p>
+              <p>&copy; 2025 MedPredict JKN. Semua hak dilindungi.</p>
+            </div>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
+
+  return sendEmail({
+    to: email,
+    subject: 'Kode Reset Password - MedPredict JKN',
+    html,
+  });
+}

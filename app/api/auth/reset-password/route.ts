@@ -9,13 +9,13 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   try {
-    const body: { token: string; password: string; passwordConfirmation: string } = await request.json();
+    const body: { code: string; password: string; passwordConfirmation: string } = await request.json();
 
-    if (!body.token || !body.password || !body.passwordConfirmation) {
+    if (!body.code || !body.password || !body.passwordConfirmation) {
       return NextResponse.json(
         {
           success: false,
-          message: "Token dan password harus diisi",
+          message: "Kode dan password harus diisi",
         } as ApiResponse<null>,
         { status: 400 }
       );
@@ -41,13 +41,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Find user with this reset token
-    const user = await prisma.user.findUnique({
-      where: { resetToken: body.token },
+    // Find user with this reset code
+    const user = await prisma.user.findFirst({
+      where: { resetCode: body.code },
       select: {
         id: true,
         email: true,
-        resetTokenExpiry: true,
+        resetCodeExpiry: true,
       },
     });
 
@@ -55,17 +55,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          message: "Token tidak valid",
+          message: "Kode tidak valid",
         } as ApiResponse<null>,
         { status: 400 }
       );
     }
 
-    if (isTokenExpired(user.resetTokenExpiry)) {
+    if (isTokenExpired(user.resetCodeExpiry)) {
       return NextResponse.json(
         {
           success: false,
-          message: "Token sudah kadaluarsa. Silakan minta link reset password baru",
+          message: "Kode sudah kadaluarsa. Silakan minta kode reset password baru",
         } as ApiResponse<null>,
         { status: 400 }
       );
@@ -74,13 +74,13 @@ export async function POST(request: NextRequest) {
     // Hash new password
     const hashedPassword = await hashPassword(body.password);
 
-    // Update password and clear reset token
+    // Update password and clear reset code
     await prisma.user.update({
       where: { id: user.id },
       data: {
         password: hashedPassword,
-        resetToken: null,
-        resetTokenExpiry: null,
+        resetCode: null,
+        resetCodeExpiry: null,
       },
     });
 

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { sendPasswordResetEmail } from "@/lib/email";
-import { generateToken, getTokenExpiry } from "@/lib/token";
+import { sendPasswordResetCodeEmail } from "@/lib/email";
+import { generateResetCode, getTokenExpiry } from "@/lib/token";
 import { ApiResponse } from "@/types";
 
 export const runtime = "nodejs";
@@ -32,37 +32,37 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: true,
-          message: "Jika email terdaftar, Anda akan menerima link reset password dalam beberapa menit",
+          message: "Jika email terdaftar, Anda akan menerima kode reset password dalam beberapa menit",
         } as ApiResponse<null>,
         { status: 200 }
       );
     }
 
-    // Generate reset token
-    const resetToken = generateToken();
-    const resetTokenExpiry = getTokenExpiry(1); // 1 hour
+    // Generate 6-digit reset code
+    const resetCode = generateResetCode();
+    const resetCodeExpiry = getTokenExpiry(0.167); // 10 minutes
 
-    // Update user with reset token
+    // Update user with reset code
     await prisma.user.update({
       where: { id: user.id },
       data: {
-        resetToken,
-        resetTokenExpiry,
+        resetCode,
+        resetCodeExpiry,
       },
     });
 
-    // Send password reset email
+    // Send password reset code email
     try {
-      await sendPasswordResetEmail(user.email, resetToken);
+      await sendPasswordResetCodeEmail(user.email, resetCode);
     } catch (emailError) {
-      console.error("Failed to send password reset email:", emailError);
-      // Continue anyway - token is still stored in DB
+      console.error("Failed to send password reset code email:", emailError);
+      // Continue anyway - code is still stored in DB
     }
 
     return NextResponse.json(
       {
         success: true,
-        message: "Jika email terdaftar, Anda akan menerima link reset password dalam beberapa menit",
+        message: "Jika email terdaftar, Anda akan menerima kode reset password dalam beberapa menit",
       } as ApiResponse<null>,
       { status: 200 }
     );
