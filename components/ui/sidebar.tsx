@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Activity, MessageCircle, LogOut, LayoutDashboard, Users } from 'lucide-react';
+import { Activity, MessageCircle, LogOut, LayoutDashboard, Users, Stethoscope, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface SidebarProps {
@@ -47,7 +47,7 @@ export function Sidebar({ onLogout, userName, userEmail, userRole, profilePhoto 
             label: 'Monitoring',
             href: '/doctor/monitoring',
             icon: Users,
-        }
+        },
     ];
 
     const navItems = userRole === 'doctor' ? doctorNavItems : patientNavItems;
@@ -128,7 +128,19 @@ export function Sidebar({ onLogout, userName, userEmail, userRole, profilePhoto 
                                 )}
                             </div>
                         </div>
-                        <p className="text-xs text-blue-200 font-semibold uppercase tracking-widest">✓ Pengguna Aktif</p>
+                        <p className="text-xs text-blue-200 font-semibold uppercase tracking-widest flex items-center gap-2">
+                            {userRole === 'doctor' ? (
+                                <>
+                                    <Stethoscope className="w-4 h-4" />
+                                    Dokter
+                                </>
+                            ) : (
+                                <>
+                                    <User className="w-4 h-4" />
+                                    Pasien
+                                </>
+                            )}
+                        </p>
                     </Link>
                 )}
 

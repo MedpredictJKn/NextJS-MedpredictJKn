@@ -63,14 +63,10 @@ export default function DashboardPage() {
         router.push("/auth/login");
     };
 
-    const healthMetrics: HealthMetric[] = [
-        { name: "Tekanan Darah", value: "120/80", unit: "mmHg", status: "normal" },
-        { name: "BMI", value: "22.5", unit: "kg/m²", status: "normal" },
-        { name: "Detak Jantung", value: "72", unit: "bpm", status: "normal" },
-        { name: "Kolesterol", value: "180", unit: "mg/dL", status: "warning" },
-    ];
+    const isDoctor = user?.role === "doctor";
 
-    const quickStats = [
+    // Patient quick stats
+    const patientQuickStats = [
         {
             label: "Total Pemeriksaan",
             value: "5",
@@ -91,7 +87,39 @@ export default function DashboardPage() {
         },
     ];
 
-    const services = [
+    // Doctor quick stats
+    const doctorQuickStats = [
+        {
+            label: "Total Pasien",
+            value: "24",
+            icon: Users,
+            color: "bg-green-500",
+        },
+        {
+            label: "Monitoring Aktif",
+            value: "8",
+            icon: AlertCircle,
+            color: "bg-orange-500",
+        },
+        {
+            label: "Pesan Terkirim",
+            value: "45",
+            icon: MessageCircle,
+            color: "bg-blue-500",
+        },
+    ];
+
+    const quickStats = isDoctor ? doctorQuickStats : patientQuickStats;
+
+    const healthMetrics: HealthMetric[] = [
+        { name: "Tekanan Darah", value: "120/80", unit: "mmHg", status: "normal" },
+        { name: "BMI", value: "22.5", unit: "kg/m²", status: "normal" },
+        { name: "Detak Jantung", value: "72", unit: "bpm", status: "normal" },
+        { name: "Kolesterol", value: "180", unit: "mg/dL", status: "warning" },
+    ];
+
+    // Patient services
+    const patientServices = [
         {
             title: "Cek Kesehatan",
             description: "Periksa BMI, tekanan darah, dan data kesehatan Anda",
@@ -111,6 +139,30 @@ export default function DashboardPage() {
             href: "/profil",
         },
     ];
+
+    // Doctor services
+    const doctorServices = [
+        {
+            title: "Monitoring Pasien",
+            description: "Pantau kesehatan dan BMI semua pasien Anda",
+            icon: Users,
+            href: "/doctor/monitoring",
+        },
+        {
+            title: "Kirim Pesan",
+            description: "Berkomunikasi dengan pasien melalui WhatsApp",
+            icon: MessageCircle,
+            href: "/doctor/monitoring",
+        },
+        {
+            title: "Profil Saya",
+            description: "Kelola data profesional dan informasi dokter",
+            icon: Users,
+            href: "/profil",
+        },
+    ];
+
+    const services = isDoctor ? doctorServices : patientServices;
 
     return (
         <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 flex">
@@ -168,7 +220,8 @@ export default function DashboardPage() {
                         })}
                     </div>
 
-                    {/* Health Status & Wellness */}
+                    {/* Patient-only: Health Status & Wellness */}
+                    {!isDoctor && (
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         {/* Health Metrics */}
                         <div className="lg:col-span-2">
@@ -250,6 +303,7 @@ export default function DashboardPage() {
                             </Link>
                         </div>
                     </div>
+                    )}
 
                     {/* Services Section */}
                     <div>
