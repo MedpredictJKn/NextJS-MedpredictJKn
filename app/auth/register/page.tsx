@@ -115,14 +115,40 @@ export default function RegisterPage() {
                                     </p>
                                 </div>
 
-                                {error && (
-                                    <div className="flex items-start gap-3 p-4 rounded-xl bg-red-500/20 border border-red-500/40 mb-6 backdrop-blur">
-                                        <AlertCircle className="w-5 h-5 text-red-400 mt-0.5 shrink-0" />
-                                        <p className="text-red-300 text-sm">{error}</p>
+                                {registered ? (
+                                    <div className="space-y-4 text-center py-8">
+                                        <div className="flex justify-center">
+                                            <div className="bg-green-500/20 p-3 rounded-full">
+                                                <Mail className="w-8 h-8 text-green-400" />
+                                            </div>
+                                        </div>
+                                        <h3 className="text-xl font-bold text-white">Verifikasi Email</h3>
+                                        <p className="text-gray-300 text-sm">
+                                            Kami telah mengirimkan link verifikasi ke email Anda di <span className="font-semibold text-cyan-400">{registeredEmail}</span>
+                                        </p>
+                                        <p className="text-gray-400 text-xs">
+                                            Silakan cek email Anda (termasuk folder spam) dan klik link verifikasi untuk mengaktifkan akun.
+                                        </p>
+                                        <p className="text-gray-400 text-xs pt-2">
+                                            Link berlaku selama 24 jam.
+                                        </p>
+                                        <Link
+                                            href="/auth/login"
+                                            className="inline-block mt-4 text-cyan-400 hover:text-cyan-300 font-medium transition-colors"
+                                        >
+                                            Kembali ke Login
+                                        </Link>
                                     </div>
-                                )}
+                                ) : (
+                                    <>
+                                        {error && (
+                                            <div className="flex items-start gap-3 p-4 rounded-xl bg-red-500/20 border border-red-500/40 mb-6 backdrop-blur">
+                                                <AlertCircle className="w-5 h-5 text-red-400 mt-0.5 shrink-0" />
+                                                <p className="text-red-300 text-sm">{error}</p>
+                                            </div>
+                                        )}
 
-                                <form onSubmit={handleSubmit} className="space-y-4">
+                                        <form onSubmit={handleSubmit} className="space-y-4">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div className="space-y-2">
                                             <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
@@ -218,6 +244,8 @@ export default function RegisterPage() {
                                         Masuk di sini
                                     </Link>
                                 </div>
+                                    </>
+                                )}
                             </div>
                         </div>
 
